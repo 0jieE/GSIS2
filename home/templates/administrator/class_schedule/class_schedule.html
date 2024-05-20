@@ -1,0 +1,145 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Class Schedules {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Class Schedule</h1>
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+        
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-class_schedule" data-toggle="modal" data-target="#new-class_schedule" data-url="{% url "add-class_schedule-admin" %}">add</button>
+                        </div>
+                        
+                        <table id="class_schedule-list" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                  <th>Enrollment</th>
+                                  <th>Subject</th>
+                                  <th>Room</th>
+                                  <th>Year Level</th>
+                                  <th>Schedule</th>
+                                  <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% include "administrator/class_schedule/list_class_schedule.html" %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-class_schedule">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+  $(function() 
+  {
+      var loadform = function() 
+        {
+          var btn = $(this);
+          console.log(btn.attr("data-url"));
+          $.ajax
+          ({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function()
+            {
+                $("#new-class_schedule").modal("show");
+            },
+            success: function (data) {
+                $("#new-class_schedule .modal-content").html(data.html_form);
+            }
+          });
+        };
+
+      var saveForm = function() 
+        {
+          var form = $(this);
+          $.ajax
+          ({
+            url: form.attr("action"),
+            data: form.serialize(),
+            type: form.attr("method"),
+            dataType: 'json',
+            success: function (data) 
+            {
+              if (data.form_is_valid) 
+              {
+                $("#class_schedule-list tbody").html(data.class_schedule_list);
+                $("#new-class_schedule").modal("hide");
+              }
+              else 
+              {
+                $("#new-class_schedule .modal-content").html(data.html_form);
+              }
+            }
+          });
+        return false;
+        }
+
+  //add class_schedule
+  $(".js-add-class_schedule").click(loadform);
+  $("#new-class_schedule").on("submit",".js-class_schedule-create-form", saveForm);
+  //edit class_schedule
+  $("#class_schedule-list").on("click", ".js-edit-class_schedule", loadform);
+  $("#new-class_schedule").on("submit", ".js-class_schedule-edit-form", saveForm);
+  //delete class_schedule
+  $("#class_schedule-list").on("click", ".js-delete-class_schedule", loadform);
+  $("#new-class_schedule").on("submit", ".js-class_schedule-delete-form", saveForm);
+});
+
+ 
+</script>
+{% endblock extra_scripts %}

@@ -1,0 +1,16 @@
+{%for r in rooms %}
+    <tr>
+        <td>{{r.room_no}}</td>
+        <td>{{r.capacity}}</td>
+        <td>{{r.room_type}}</td>
+        <td>{{r.college}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-room" data-url="{% url "edit-room-admin" r.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-room" data-url="{% url "delete-room-admin" r.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

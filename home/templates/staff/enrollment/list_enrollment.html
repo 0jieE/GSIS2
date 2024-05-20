@@ -1,0 +1,15 @@
+{%for e in enrollments %}
+    <tr>
+        <td>{{e.enrollment_description}}</td>
+        <td>{{e.semester}}</td>
+        <td>{{e.school_year}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-enrollment" data-url="{% url "edit-enrollment-admin" e.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-enrollment" data-url="{% url "delete-enrollment-admin" e.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

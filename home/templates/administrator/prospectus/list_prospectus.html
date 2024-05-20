@@ -1,0 +1,14 @@
+{%for p in prospectus %}
+    <tr>
+        <td>{{p.prospectus_name}}</td>
+        <td>{{p.description}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-prospectus" data-url="{% url "edit-prospectus-admin" p.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-prospectus" data-url="{% url "delete-prospectus-admin" p.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

@@ -1,0 +1,156 @@
+{% load i18n static admin_adminlte %}
+
+<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+    <!-- Add icons to the links using the .nav-icon class
+           with font-awesome or any other icon font library -->
+
+    {% admin_get_menu as app_list %}
+    {% if app_list %}
+    {% for app in app_list %}
+    {% if app.has_perms and not app.pinned %}
+    <li class="nav-item {% if 'dashboard' in parent %} menu-open {% endif %}">
+      <a class="nav-link {% if app_label != app.label and app.url not in request.path|urlencode  %} collapsed{% endif %}"
+        data-bs-toggle="collapse" data-bs-target="#submenu-{{ app.app_label }}" href="{{ app.url }}">
+        <i class="nav-icon {{ app.icon }}"></i>
+        <p>
+          {{ app.label|slice:10 }}{% if app.label|length > 10 %}..{% endif %}
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+
+      {% if app.models %}
+      <ul class="nav nav-treeview">
+        {% for model in app.models %}
+        {% if model.url %}
+        <li class="nav-item">
+          <a class="nav-link {% if 'bootstrap-tables' in segment or model.url in request.path|urlencode %} active {% endif %}"
+            href="{{ model.url }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>{{ model.label }}</p>
+          </a>
+        </li>
+        {% else %}
+        <li class="nav-item">{{ model.label }}</li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+      <li class="nav-item {% if 'dashboard' in parent %} menu-open {% endif %}">
+        <a href="#" class="nav-link {% if 'dashboard' in parent %} active {% endif %}">
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <p>
+            Dashboard
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'admin:index' %}" class="nav-link {% if 'index' in segment %} active {% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Dashboard v1</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    {% endif %}
+
+
+
+    {% if request.user.is_authenticated and not request.user.student %}
+    <li class="nav-item">
+      <a>
+        <i class="fas fa-calendar"></i>
+        ENROLLMENT</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'enrollment-admin' %}" class="nav-link">
+        <i class="fas fa-folder-open"></i>
+        <p>Enrollments</p>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'class_schedule-admin' %}" class="nav-link">
+        <i class="fas fa-list-alt"></i>
+        <p>Class Schedule</p>s
+      </a>
+    </li>  
+    <li class="nav-item">
+      <a>
+        <i class="fas fa-tag"></i>
+        PREFERENCES</a>
+    </li>
+    <li class="nav-item ">
+      <a class="nav-link">
+        <i class="fas fa-chevron-down"></i>
+        <p>COLLEGE/UNIT</p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item"> 
+          <a href="{% url 'college-admin' %}" class="nav-link {% if 'simple_table' in segment %} active {% endif %}">
+            <i class="fas fa-university nav-icon"></i>
+            <p>College</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'department-admin' %}" class="nav-link {% if 'data_table' in segment %} active {% endif %}">
+            <i class="fas fa-balance-scale nav-icon"></i>
+            <p>Department</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'course-admin' %}" class="nav-link {% if 'jsGrid' in segment %} active {% endif %}">
+            <i class="fas fa-graduation-cap nav-icon"></i>
+            <p>Course</p>
+          </a>
+        </li>
+      </ul>
+    </li> 
+    <li class="nav-item ">
+      <a class="nav-link">
+        <i class="fas fa-chevron-down"></i>
+        <p>PROSPECTUS</p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{% url 'prospectus-admin' %}" class="nav-link {% if 'simple_table' in segment %} active {% endif %}">
+            <i class="far fa-file nav-icon"></i>
+            <p>Prospectus</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'subject-admin' %}" class="nav-link {% if 'data_table' in segment %} active {% endif %}">
+            <i class="fas fa-column nav-icon"></i>
+            <p>Subjects</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'course_prospectus-admin' %}" class="nav-link {% if 'jsGrid' in segment %} active {% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Course Prospectus</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'room-admin' %}" class="nav-link {% if 'simple_table' in segment %} active {% endif %}">
+        <i class="far fa-circle nav-icon"></i>
+        <p>Rooms</p>
+      </a>
+    </li>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+    <li class="nav-item">
+      <a href="{% url 'signout' %}">
+        <p>Signout</p>
+      </a>
+    </li>
+    {% endif %}       
+    
+  </ul>
+

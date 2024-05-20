@@ -1,0 +1,150 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Data Tables {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Courses Prospectus</h1>
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+        
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">add</button>
+                        </div>
+                        
+                        <table id="college-list"class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                  <th>Prospectus</th>
+                                  <th>Course</th>
+                                  <th>subject</th>
+                                  <th>Pre Requisit1</th>
+                                  <th>Pre Requisit2</th>
+                                  <th>Pre Requisit3</th>
+                                  <th>Pre Requisit4 </th>
+                                  <th>Pre Requisit5</th>
+                                  <th>Semester</th>
+                                  <th>Year Level</th>
+                                  <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% include "administrator/course_prospectus/list_course_prospectus.html" %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-course_prospectus">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+  $(function() 
+  {
+      var loadform = function() 
+        {
+          var btn = $(this);
+          console.log(btn.attr("data-url"));
+          $.ajax
+          ({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function()
+            {
+                $("#new-course_prospectus").modal("show");
+            },
+            success: function (data) {
+                $("#new-course_prospectus .modal-content").html(data.html_form);
+            }
+          });
+        };
+
+      var saveForm = function() 
+        {
+          var form = $(this);
+          $.ajax
+          ({
+            url: form.attr("action"),
+            data: form.serialize(),
+            type: form.attr("method"),
+            dataType: 'json',
+            success: function (data) 
+            {
+              if (data.form_is_valid) 
+              {
+                $("#course_prospectus-list tbody").html(data.course_prospectus_list);
+                $("#new-course_prospectus").modal("hide");
+              }
+              else 
+              {
+                $("#new-course_prospectus .modal-content").html(data.html_form);
+              }
+            }
+          });
+        return false;
+        }
+
+  //add course_prospectus
+  $(".js-add-course_prospectus").click(loadform);
+  $("#new-course_prospectus").on("submit",".js-course_prospectus-create-form", saveForm);
+  //edit course_prospectus
+  $("#course_prospectus-list").on("click", ".js-edit-course_prospectus", loadform);
+  $("#new-course_prospectus").on("submit", ".js-course_prospectus-edit-form", saveForm);
+  //delete course_prospectus
+  $("#course_prospectus-list").on("click", ".js-delete-course_prospectus", loadform);
+  $("#new-course_prospectus").on("submit", ".js-course_prospectus-delete-form", saveForm);
+});
+
+ 
+</script>
+{% endblock extra_scripts %}

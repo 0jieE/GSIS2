@@ -1,0 +1,22 @@
+{%for c in course_prospectus %}
+    <tr>
+        <td>{{c.prospectus}}</td>
+        <td>{{c.course}}</td>
+        <td>{{c.subject}}</td>
+        <td>{{c.pre_requisit1}}</td>
+        <td>{{c.pre_requisit2}}</td>
+        <td>{{c.pre_requisit3}}</td>
+        <td>{{c.pre_requisit4}}</td>
+        <td>{{c.pre_requisit5}}</td>
+        <td>{{c.semester}}</td>
+        <td>{{c.year_level}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-course_prospectus" data-url="{% url "edit-course_prospectus-admin" c.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-course_prospectus" data-url="{% url "delete-course_prospectus-admin" c.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

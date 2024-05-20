@@ -1,0 +1,142 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Data Tables {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Prospectus</h1>
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+        
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-prospectus" data-toggle="modal" data-target="#new-prospectus" data-url="{% url "add-prospectus-admin" %}">add</button>
+                        </div>
+                        
+                        <table id="prospectus-list" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                  <th>Prospectus Name</th>
+                                  <th>Description</th>
+                                  <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% include "administrator/prospectus/list_prospectus.html" %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-prospectus">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+  $(function() 
+  {
+      var loadform = function() 
+        {
+          var btn = $(this);
+          console.log(btn.attr("data-url"));
+          $.ajax
+          ({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function()
+            {
+                $("#new-prospectus").modal("show");
+            },
+            success: function (data) {
+                $("#new-prospectus .modal-content").html(data.html_form);
+            }
+          });
+        };
+
+      var saveForm = function() 
+        {
+          var form = $(this);
+          $.ajax
+          ({
+            url: form.attr("action"),
+            data: form.serialize(),
+            type: form.attr("method"),
+            dataType: 'json',
+            success: function (data) 
+            {
+              if (data.form_is_valid) 
+              {
+                $("#prospectus-list tbody").html(data.prospectus_list);
+                $("#new-prospectus").modal("hide");
+              }
+              else 
+              {
+                $("#new-prospectus .modal-content").html(data.html_form);
+              }
+            }
+          });
+        return false;
+        }
+
+  //add prospectus
+  $(".js-add-prospectus").click(loadform);
+  $("#new-prospectus").on("submit",".js-prospectus-create-form", saveForm);
+  //edit prospectus
+  $("#prospectus-list").on("click", ".js-edit-prospectus", loadform);
+  $("#new-prospectus").on("submit", ".js-prospectus-edit-form", saveForm);
+  //delete prospectus
+  $("#prospectus-list").on("click", ".js-delete-prospectus", loadform);
+  $("#new-prospectus").on("submit", ".js-prospectus-delete-form", saveForm);
+});
+
+ 
+</script>
+{% endblock extra_scripts %}

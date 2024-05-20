@@ -1,0 +1,17 @@
+{%for c in class_schedules %}
+    <tr>
+        <td>{{c.enrollment}}</td>
+        <td>{{c.subject}}</td>
+        <td>{{c.room}}</td>
+        <td>{{c.year_level}}</td>
+        <td>{{c.schedule}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-class_schedule" data-url="{% url "edit-class_schedule-admin" c.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-class_schedule" data-url="{% url "delete-class_schedule-admin" c.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

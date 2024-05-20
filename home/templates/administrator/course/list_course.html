@@ -1,0 +1,17 @@
+{%for c in courses %}
+    <tr>
+        <td>{{c.course_name}}</td>
+        <td>{{c.short_name}}</td>
+        <td>{{c.course_description}}</td>
+        <td>{{c.period}}</td>
+        <td>{{c.department}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-course" data-url="{% url "edit-course-admin" c.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-course" data-url="{% url "delete-course-admin" c.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

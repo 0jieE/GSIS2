@@ -1,0 +1,48 @@
+{%load crispy_forms_tags%}
+
+<form method='post' action="{%url 'edit-course_prospectus-admin' form.instance.pk%}" class="js-course_prospectus-edit-form">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h4 class="modal-title">Edit course_prospectus</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-md-12">
+            {{form.prospectus|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.course|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.subject|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.pre_requisit1|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.pre_requisit2|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.pre_requisit3|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.pre_requisit4|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.pre_requisit5|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.semester|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.year_level|as_crispy_field}}
+        </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+</form>
+                     
