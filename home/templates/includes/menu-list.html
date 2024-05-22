@@ -63,94 +63,89 @@
 
 
     {% if request.user.is_authenticated and not request.user.student %}
+    <li class="nav-header">ENROLLMENT</li>
     <li class="nav-item">
-      <a>
-        <i class="fas fa-calendar"></i>
-        ENROLLMENT</a>
-    </li>
-    <li class="nav-item">
-      <a href="{% url 'enrollment-admin' %}" class="nav-link">
-        <i class="fas fa-folder-open"></i>
-        <p>Enrollments</p>
+      <a href="{% url 'enrollment-admin' %}" class="nav-link {% if 'enrollments' in segment %} active {% endif %}">
+        <i class="nav-icon fas fa-edit"></i>
+        <p>Settings</p>
       </a>
     </li>
+    <li class="nav-header">SCHEDULES</li>
     <li class="nav-item">
-      <a href="{% url 'class_schedule-admin' %}" class="nav-link">
-        <i class="fas fa-list-alt"></i>
-        <p>Class Schedule</p>s
+      <a href="{% url 'class_schedule-admin' %}" class="nav-link {% if 'class_schedule' in segment %} active {% endif %}">
+        <i class="nav-icon far fa-calendar-alt"></i>
+        <p>Class</p>
       </a>
-    </li>  
+    </li> 
     <li class="nav-item">
-      <a>
-        <i class="fas fa-tag"></i>
-        PREFERENCES</a>
-    </li>
-    <li class="nav-item ">
-      <a class="nav-link">
-        <i class="fas fa-chevron-down"></i>
+      <a href="{% url 'room-admin' %}" class="nav-link {% if 'room' in segment %} active {% endif %}">
+        <i class="fas fa-university nav-icon"></i>
+        <p>Rooms</p>
+      </a>
+    </li> 
+    <li class="nav-header">PREFERENCES</li>
+    <li class="nav-item {% if 'college_unit' in parent %} menu-open {% endif %}">
+      <a href="#" class="nav-link {% if 'college_unit' in parent %} active {% endif %}">
+        <i class="fas fa-university nav-icon"></i>
         <p>COLLEGE/UNIT</p>
+        <i class="fas fa-angle-left right"></i>
       </a>
       <ul class="nav nav-treeview">
         <li class="nav-item"> 
-          <a href="{% url 'college-admin' %}" class="nav-link {% if 'simple_table' in segment %} active {% endif %}">
+          <a href="{% url 'college-admin' %}" class="nav-link {% if 'college' in segment %} active {% endif %}">
             <i class="fas fa-university nav-icon"></i>
             <p>College</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'department-admin' %}" class="nav-link {% if 'data_table' in segment %} active {% endif %}">
+          <a href="{% url 'department-admin' %}" class="nav-link {% if 'department' in segment %} active {% endif %}">
             <i class="fas fa-balance-scale nav-icon"></i>
             <p>Department</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'course-admin' %}" class="nav-link {% if 'jsGrid' in segment %} active {% endif %}">
+          <a href="{% url 'course-admin' %}" class="nav-link {% if 'course' in segment %} active {% endif %}">
             <i class="fas fa-graduation-cap nav-icon"></i>
             <p>Course</p>
           </a>
         </li>
       </ul>
     </li> 
-    <li class="nav-item ">
-      <a class="nav-link">
-        <i class="fas fa-chevron-down"></i>
+    <li class="nav-item {% if 'prospectus_' in parent %} menu-open {% endif %} ">
+      <a href="#" class="nav-link {% if 'prospectus_' in parent %} active {% endif %}">
+        <i class="nav-icon fas fa-table"></i>
         <p>PROSPECTUS</p>
+        <i class="fas fa-angle-left right"></i>
       </a>
       <ul class="nav nav-treeview">
         <li class="nav-item">
-          <a href="{% url 'prospectus-admin' %}" class="nav-link {% if 'simple_table' in segment %} active {% endif %}">
+          <a href="{% url 'prospectus-admin' %}" class="nav-link {% if 'prospectus' in segment %} active {% endif %}">
             <i class="far fa-file nav-icon"></i>
             <p>Prospectus</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'subject-admin' %}" class="nav-link {% if 'data_table' in segment %} active {% endif %}">
-            <i class="fas fa-column nav-icon"></i>
+          <a href="{% url 'subject-admin' %}" class="nav-link {% if 'subject' in segment %} active {% endif %}">
+            <i class="nav-icon fas fa-book"></i>
             <p>Subjects</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'course_prospectus-admin' %}" class="nav-link {% if 'jsGrid' in segment %} active {% endif %}">
-            <i class="far fa-circle nav-icon"></i>
+          <a href="{% url 'course_prospectus-admin' %}" class="nav-link {% if 'course_p' in segment %} active {% endif %}">
+            <i class="far fa-file nav-icon"></i>
             <p>Course Prospectus</p>
           </a>
         </li>
       </ul>
     </li>
-    <li class="nav-item">
-      <a href="{% url 'room-admin' %}" class="nav-link {% if 'simple_table' in segment %} active {% endif %}">
-        <i class="far fa-circle nav-icon"></i>
-        <p>Rooms</p>
-      </a>
-    </li>
     {% endif %}
     {% if request.user.is_authenticated %}
     <li class="nav-item">
       <a href="{% url 'signout' %}">
-        <p>Signout</p>
+        <i class="fa fa-sign-out-alt nav-icon"></i>
+        Signout
       </a>
     </li>
-    {% endif %}       
-    
+    {% endif %}        
   </ul>
 

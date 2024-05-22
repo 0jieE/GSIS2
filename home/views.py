@@ -43,10 +43,10 @@ def login_view(request):
                 return redirect('/admin')
             elif user is not None and user.administrator:
                 login(request, user)
-                return redirect('/administrator/home')
+                return redirect('/administrator/enrollment/list')
             elif user is not None and user.staff:
                 login(request, user)
-                return redirect('/staff/home')
+                return redirect('/administrator/enrollment/list')
             elif user is not None and user.student:
                 login(request, user)
                 return redirect('/student/home')
@@ -160,7 +160,12 @@ def student(request):
 
 def department(request):
     departments = Department.objects.all()
-    return render(request, 'administrator/department/departments.html',{'departments':departments})
+    context = {
+          'parent': 'college_unit',
+          'segment': 'department',
+          'departments':departments,
+    }
+    return render(request, 'administrator/department/departments.html',context)
 
 def add_department(request):
         if(request.method == 'POST'):
@@ -218,7 +223,12 @@ def save_department(request, form, template_name):
 
 def college(request):
         colleges = College.objects.all()
-        return render(request, 'administrator/college/college.html',{'colleges':colleges})
+        context = {
+              'parent':'college_unit',
+              'segment':'college',
+              'colleges': colleges,
+        }
+        return render(request, 'administrator/college/college.html',context)
 
 def add_college(request):
         if(request.method == 'POST'):
@@ -276,7 +286,13 @@ def save_college(request, form, template_name):
 
 def course(request):
         courses = Course.objects.all()
-        return render(request, 'administrator/course/course.html',{'courses':courses})
+        departments = Department.objects.all()
+        context = {
+                'parent': 'college_unit',
+                'segment': 'course',
+                'courses':courses,
+        }
+        return render(request, 'administrator/course/course.html',context)
 
 def add_course(request):
         if(request.method == 'POST'):
@@ -334,7 +350,12 @@ def save_course(request, form, template_name):
 
 def enrollment(request):
     enrollments = Enrollment.objects.all()
-    return render(request, 'administrator/enrollment/enrollment.html',{'enrollments':enrollments})
+    context = {
+          'parent':'',
+          'segment': 'enrollments',
+          'enrollments':enrollments
+    }
+    return render(request, 'administrator/enrollment/enrollment.html', context)
 
 def add_enrollment(request):
         if(request.method == 'POST'):
@@ -392,7 +413,11 @@ def save_enrollment(request, form, template_name):
 
 def room(request):
         rooms = Room.objects.all()
-        return render(request, 'administrator/room/room.html',{'rooms':rooms})
+        context = {
+              'segment':'room',
+              'rooms':rooms
+        }
+        return render(request, 'administrator/room/room.html',context)
 
 def add_room(request):
         if(request.method == 'POST'):
@@ -450,7 +475,12 @@ def save_room(request, form, template_name):
 
 def subject(request):
         subjects = Subject.objects.all()
-        return render(request, 'administrator/subject/subject.html',{'subjects':subjects})
+        context = {
+                'parent': 'prospectus_',
+                'segment': 'subject',
+                'subjects':subjects,
+        }
+        return render(request, 'administrator/subject/subject.html',context)
 
 def add_subject(request):
         if(request.method == 'POST'):
@@ -508,7 +538,12 @@ def save_subject(request, form, template_name):
 
 def class_schedule(request):
         class_schedules = Class_Schedule.objects.all()
-        return render(request, 'administrator/class_schedule/class_schedule.html',{'class_schedules':class_schedules})
+        context = {
+          'parent': 'enrollment',
+          'segment': 'class_schedule',
+          'class_schedules':class_schedules,
+    }
+        return render(request, 'administrator/class_schedule/class_schedule.html',context)
 
 def add_class_schedule(request):
         if(request.method == 'POST'):
@@ -566,7 +601,12 @@ def save_class_schedule(request, form, template_name):
 
 def prospectus(request):
         prospectus = Prospectus.objects.all()
-        return render(request, 'administrator/prospectus/prospectus.html',{'prospectus':prospectus})
+        context = {
+              'parent':'prospectus_',
+              'segment':'prospectus',
+              'prospectus':prospectus,          
+        }
+        return render(request, 'administrator/prospectus/prospectus.html',context)
 
 def add_prospectus(request):
         if(request.method == 'POST'):
@@ -624,7 +664,12 @@ def save_prospectus(request, form, template_name):
 
 def course_prospectus(request):
         course_prospectus = Course_Prospectus.objects.all()
-        return render(request, 'administrator/course_prospectus/course_prospectus.html',{'course_prospectus':course_prospectus})
+        context = {
+              'parent':'prospectus_',
+              'segment':'course_p',
+              'course_prospectus':course_prospectus,        
+        }
+        return render(request, 'administrator/course_prospectus/course_prospectus.html',context)
 
 def add_course_prospectus(request):
         if(request.method == 'POST'):
