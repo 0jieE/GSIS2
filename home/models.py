@@ -170,10 +170,10 @@ class Course(models.Model):
     
 class Enrollment(models.Model):
     # updated ***
-    FIRST = '1st'
-    SECOND = '2nd'
+    FIRST = '1st Semester'
+    SECOND = '2nd Semester'
     SUMMER = 'Summer'
-    SEMESTER = ((FIRST, '1st'), (SECOND,'2nd'), (SUMMER, 'Summer'))
+    SEMESTER = ((FIRST, '1st Semester'), (SECOND,'2nd Semester'), (SUMMER, 'Summer'))
 
     SY2020 = '2020-2021'
     SY2021 = '2021-2022'
@@ -201,7 +201,7 @@ class Enrollment(models.Model):
     )
 
     enrollment_description = models.CharField(max_length=50)
-    semester = models.CharField(max_length=10, choices=SEMESTER, default=FIRST)
+    semester = models.CharField(max_length=20, choices=SEMESTER, default=FIRST)
     school_year = models.CharField(max_length=10, choices=SCHOOL_YEAR, default=SY2023)
 
     def __str__(self):
@@ -250,6 +250,21 @@ class Prospectus(models.Model):
 
 
 class Course_Prospectus(models.Model):
+    FIRST = '1st Semester'
+    SECOND = '2nd Semester'
+    SUMMER = 'Summer'
+    SEMESTER = ((FIRST, '1st Semester'), (SECOND,'2nd Semester'), (SUMMER, 'Summer'))
+
+    FIRST_YEAR = '1st Year'
+    SECOND_YEAR = '2nd Year'
+    THIRD_YEAR = '3rd Year'
+    FOURTH_YEAR = '4th Year'
+    FIFTH_YEAR = '5th Year'
+    YEAR_LEVEL = ((FIRST_YEAR,'1st Year'),
+                  (SECOND_YEAR,'2nd Year'),
+                  (THIRD_YEAR,'3rd Year'),
+                  (FOURTH_YEAR,'4th Year'),
+                  (FIFTH_YEAR,'5th Year'),)
     prospectus = models.ForeignKey(Prospectus, related_name = 'course_prospectus_name', on_delete=models.CASCADE)
     course = models.ForeignKey(Course, related_name = 'prospectuse_course_name', on_delete = models.CASCADE)
     subject = models.ForeignKey(Subject, related_name = 'prospectus_subject_name', on_delete = models.CASCADE)
@@ -258,7 +273,7 @@ class Course_Prospectus(models.Model):
     pre_requisit3 = models.ForeignKey(Subject, related_name = 'subject_prereq3', on_delete = models.CASCADE)
     pre_requisit4 = models.ForeignKey(Subject, related_name = 'subject_prereq4', on_delete = models.CASCADE)
     pre_requisit5 = models.ForeignKey(Subject, related_name = 'subject_prereq5', on_delete = models.CASCADE)
-    semester = models.IntegerField()
-    year_level = models.CharField(max_length=50)
+    semester = models.CharField(max_length=20, choices=SEMESTER, default=FIRST)
+    year_level = models.CharField(max_length=20, choices=YEAR_LEVEL, default=FIRST_YEAR)
 
 

@@ -96,10 +96,10 @@
             dataType: 'json',
             beforeSend: function()
             {
-                $("#new-room").modal("show");
+                $("#new-subject").modal("show");
             },
             success: function (data) {
-                $("#new-room .modal-content").html(data.html_form);
+                $("#new-subject .modal-content").html(data.html_form);
             }
           });
         };
@@ -117,27 +117,27 @@
             {
               if (data.form_is_valid) 
               {
-                $("#room-list tbody").html(data.room_list);
-                $("#new-room").modal("hide");
+                $("#subject-list tbody").html(data.subject_list);
+                $("#new-subject").modal("hide");
               }
               else 
               {
-                $("#new-room .modal-content").html(data.html_form);
+                $("#new-subject .modal-content").html(data.html_form);
               }
             }
           });
         return false;
         }
 
-  //add room
-  $(".js-add-room").click(loadform);
-  $("#new-room").on("submit",".js-room-create-form", saveForm);
-  //edit room
-  $("#room-list").on("click", ".js-edit-room", loadform);
-  $("#new-room").on("submit", ".js-room-edit-form", saveForm);
-  //delete room
-  $("#room-list").on("click", ".js-delete-room", loadform);
-  $("#new-room").on("submit", ".js-room-delete-form", saveForm);
+  //add subject
+  $(".js-add-subject").click(loadform);
+  $("#new-subject").on("submit",".js-subject-create-form", saveForm);
+  //edit subject
+  $("#subject-list").on("click", ".js-edit-subject", loadform);
+  $("#new-subject").on("submit", ".js-subject-edit-form", saveForm);
+  //delete subject
+  $("#subject-list").on("click", ".js-delete-subject", loadform);
+  $("#new-subject").on("submit", ".js-subject-delete-form", saveForm);
 });
 
  

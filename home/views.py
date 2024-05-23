@@ -289,7 +289,7 @@ def course(request):
         departments = Department.objects.all()
         context = {
                 'parent': 'college_unit',
-                'segment': 'course',
+                'segment': 'courses',
                 'courses':courses,
         }
         return render(request, 'administrator/course/course.html',context)
@@ -699,7 +699,7 @@ def delete_course_prospectus(request,pk):
             data['course_prospectus_list'] = render_to_string('administrator/course_prospectus/list_course_prospectus.html',{'course_prospectus':course_prospectus})
         else:    
             context = {'course_prospectus':course_prospectus}
-            data['html_form'] = render_to_string('administrator/course_prospectus/delete_course_propectus.html',context,request=request)
+            data['html_form'] = render_to_string('administrator/course_prospectus/delete_course_prospectus.html',context,request=request)
         return JsonResponse(data)
 
 
@@ -709,7 +709,7 @@ def save_course_prospectus(request, form, template_name):
         form.save()
         data['form_is_valid'] = True
         course_prospectus= Course_Prospectus.objects.all()
-        data['course_prospectus_list'] = render_to_string('administrator/course_prospectus/list_course_propectus.html',{'course_prospectus':course_prospectus})
+        data['course_prospectus_list'] = render_to_string('administrator/course_prospectus/list_course_prospectus.html',{'course_prospectus':course_prospectus})
     else:
         data['form_is_valid'] = False
 
