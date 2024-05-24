@@ -163,12 +163,15 @@ def user_profile(request):
 
 
 def department(request):
-    departments = Department.objects.all()
-    context = {
-          'parent': 'college_unit',
-          'segment': 'department',
-          'departments':departments,
-    }
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        departments = Department.objects.all()
+        context = {
+                'parent': 'college_unit',
+                'segment': 'department',
+                'departments':departments,
+        }
     return render(request, 'administrator/department/departments.html',context)
 
 def add_department(request):
@@ -226,6 +229,9 @@ def save_department(request, form, template_name):
 
 
 def college(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
         colleges = College.objects.all()
         context = {
               'parent':'college_unit',
@@ -289,6 +295,9 @@ def save_college(request, form, template_name):
 
 
 def course(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
         courses = Course.objects.all()
         departments = Department.objects.all()
         context = {
@@ -353,12 +362,15 @@ def save_course(request, form, template_name):
 
 
 def enrollment(request):
-    enrollments = Enrollment.objects.all()
-    context = {
-          'parent':'',
-          'segment': 'enrollments',
-          'enrollments':enrollments
-    }
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        enrollments = Enrollment.objects.all()
+        context = {
+                'parent':'',
+                'segment': 'enrollments',
+                'enrollments':enrollments
+        }
     return render(request, 'administrator/enrollment/enrollment.html', context)
 
 def add_enrollment(request):
@@ -416,6 +428,9 @@ def save_enrollment(request, form, template_name):
 
 
 def room(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
         rooms = Room.objects.all()
         context = {
               'segment':'room',
@@ -478,6 +493,9 @@ def save_room(request, form, template_name):
 
 
 def subject(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
         subjects = Subject.objects.all()
         context = {
                 'parent': 'prospectus_',
@@ -541,6 +559,9 @@ def save_subject(request, form, template_name):
 
 
 def class_schedule(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
         class_schedules = Class_Schedule.objects.all()
         context = {
           'parent': 'enrollment',
@@ -604,6 +625,9 @@ def save_class_schedule(request, form, template_name):
 
 
 def prospectus(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
         prospectus = Prospectus.objects.all()
         context = {
               'parent':'prospectus_',
@@ -667,6 +691,9 @@ def save_prospectus(request, form, template_name):
 
 
 def course_prospectus(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
         course_prospectus = Course_Prospectus.objects.all()
         context = {
               'parent':'prospectus_',
