@@ -25,11 +25,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-        
-                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">add</button>
-                        </div>
-                        
+                      <div class="card-header">
+      
+                        <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">add</button>
+                      </div>
+                      <div class="card-body p-0"> 
                         <table id="course_prospectus-list"class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -46,6 +46,7 @@
                               {% include "administrator/course_prospectus/list_course_prospectus.html" %}
                             </tbody>
                         </table>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -141,6 +142,21 @@
   $("#new-course_prospectus").on("submit", ".js-course_prospectus-delete-form", saveForm);
 });
 
+$(function () {
+  $("#").DataTable({
+    "responsive": true, "lengthChange": false, "autoWidth": false,
+    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+  }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+  $('#').DataTable({
+    "paging": true,
+    "lengthChange": false,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": false,
+    "responsive": true,
+  });
+});
  
 </script>
 {% endblock extra_scripts %}
