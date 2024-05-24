@@ -1,6 +1,5 @@
 asgiref==3.8.1
 crispy-bootstrap4==2024.1
-Django==5.0.6
 django-admin-adminlte==1.0.5
 django-crispy-forms==2.1
 gunicorn==21.2.0

@@ -3,12 +3,12 @@
         <td>{{c.college_name}}</td>
         <td>{{c.short_name}}</td>
         <td>
-            <button class="btn btn-primary js-edit-college" data-url="{% url "edit-college-admin" c.pk%}">
+            <button class="btn btn-primary btn-sm js-edit-college" data-url="{% url "edit-college-admin" c.pk%}">
                 Edit
             </button>
-            <button class="btn btn-danger js-delete-college" data-url="{% url "delete-college-admin" c.pk%}">
+            <button class="btn btn-danger btn-sm js-delete-college" data-url="{% url "delete-college-admin" c.pk%}">
                 Delete
             </button>
         </td>
     </tr>
-{%endfor%}
+{%endfor%}  

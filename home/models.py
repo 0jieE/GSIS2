@@ -140,7 +140,7 @@ class Student(models.Model):
 #College----------------------------------------------------------------------
 
 class College(models.Model):
-    college_name = models.CharField(max_length=50)
+    college_name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -148,7 +148,7 @@ class College(models.Model):
         return template.format(self)
 
 class Department(models.Model):
-    department_name = models.CharField(max_length=50)
+    department_name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=50)
     college = models.ForeignKey(College, related_name ='college_id', on_delete = models.CASCADE, null = True, blank = True)
 
@@ -157,9 +157,9 @@ class Department(models.Model):
         return template.format(self)
 
 class Course(models.Model):
-    course_name = models.CharField(max_length=50)
+    course_name = models.CharField(max_length=250)
     short_name = models.CharField(max_length=50)
-    course_description = models.CharField(max_length=50)
+    course_description = models.CharField(max_length=250)
     course_period = models.IntegerField()
     department = models.ForeignKey(Department, related_name = 'course_department_name', on_delete = models.CASCADE)
     def __str__(self):
