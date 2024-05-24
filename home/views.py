@@ -148,6 +148,10 @@ def student(request):
     
     return render(request, 'student/student_home.html')
 
+def user_profile(request):
+    
+    return render(request, 'accounts/user_profile.html')
+
 #///////////////////////////////CRUDE ADMINISTRATOR/////////////////////////////////////////////////////////////
 
 #________________________________________________________________________________________________________
