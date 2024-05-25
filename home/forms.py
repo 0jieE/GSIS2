@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UsernameField, PasswordResetForm, SetPasswordForm
-from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
+from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator
 from django.utils.translation import gettext_lazy as _
 
 
@@ -283,3 +283,34 @@ class CoursePropectuseform(forms.ModelForm):
     class Meta:
         model = Course_Prospectus
         fields = ['prospectus','course','subject','pre_requisit1','pre_requisit2','pre_requisit3','pre_requisit4','pre_requisit5','semester','year_level']
+
+class StudentProfileForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['email_address','gender','birth_date','home_address','contact_number']
+
+class StaffProfileForm(forms.ModelForm):
+    class Meta:
+        model = Staff
+        fields = ['contact_number',]
+
+class AdministratorProfileForm(forms.ModelForm):
+    class Meta:
+        model = Administrator
+        fields = ['contact_number',]
+
+class StudentAccountEditForm(forms.ModelForm):
+    class Meta:
+        model = Student_user
+        fields = ('username','first_name','middle_name','last_name','id_no')
+
+class StaffAccountEditForm(forms.ModelForm):
+    class Meta:
+        model = Staff_user
+        fields = ('username','first_name','middle_name','last_name','id_no')
+
+class AadministratorAccountEditForm(forms.ModelForm):
+    class Meta:
+        model = Administrator_user
+        fields = ('username','first_name','middle_name','last_name','id_no')
+

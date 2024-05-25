@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{%load crispy_forms_tags%}
 
 {% block title %} User Profile {% endblock title %}
 
@@ -38,10 +39,30 @@
                 </div>
 
                 <h3 class="profile-username text-center">{{request.user.first_name}} {{request.user.middle_name}} {{request.user.last_name}}</h3>
+                {% if request.user.student %}
+                <p class="text-muted text-center">STUDENT</p>
+                {% elif request.user.staff %}
+                <p class="text-muted text-center">STAFF</p>
+                {% elif request.user.administrator %}
+                <p class="text-muted text-center">ADMINISTRATOR</p>
+                {% endif %}
 
-                <p class="text-muted text-center">{{request.user.id_no}}</p>
+                <strong><i class="fas fa-pencil-alt mr-1"></i>Username:</strong>
 
-                <a href="#"><b>Edit</b></a>
+                <p class="text-muted">
+                  {{request.user.username}}
+                </p>
+
+                <hr>
+                <strong><i class="fas fa-pencil-alt mr-1"></i>ID No:</strong>
+
+                <p class="text-muted">
+                  {{request.user.id_no}}
+                </p>
+
+                <hr>
+
+                <button class="btn btn-primary span4 proj-div" data-toggle="modal" data-target="#edit-account"><b>Edit</b></button>
               </div>
               <!-- /.card-body -->
             </div>
@@ -54,52 +75,52 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                {% if request.user.student %}
-                <strong><i class="fas fa-pencil-alt mr-1"></i>Email address</strong>
-
-                <p class="text-muted">
-            
-                </p>
-
-                <hr>
-
-                <strong><i class="fas fa-book mr-1"></i>Gender</strong>
-
-                <p class="text-muted">
-                  
-                </p>
-
-                <hr>
-
-                <strong><i class="fas fa-map-marker-alt mr-1"></i>Birth date</strong>
-
-                <p class="text-muted">
-
-                </p>
-
-                <hr>
-
-                <strong><i class="fas fa-pencil-alt mr-1"></i>Home address</strong>
-
-                <p class="text-muted">
-            
-                </p>
-
-                <hr>
-
-                <strong><i class="far fa-file-alt mr-1"></i>Contact number</strong>
-
-                <p class="text-muted">
-
-                </p>
-                <a href="#"><b>Edit</b></a>
+                {% if request.user.student %}              
+                  <strong><i class="fas fa-pencil-alt mr-1"></i>Email address</strong>
+                    
+                  <p class="text-muted">
+                    {{user.email_address}}
+                  </p>
+  
+                  <hr>
+  
+                  <strong><i class="fas fa-book mr-1"></i>Gender</strong>
+  
+                  <p class="text-muted">
+                    {{user.gender}}
+                  </p>
+  
+                  <hr>
+  
+                  <strong><i class="fas fa-map-marker-alt mr-1"></i>Birth date</strong>
+  
+                  <p class="text-muted">
+                    {{user.birth_date}}
+                  </p>
+  
+                  <hr>
+  
+                  <strong><i class="fas fa-pencil-alt mr-1"></i>Home address</strong>
+  
+                  <p class="text-muted">
+                    {{user.home_address}}
+                  </p>
+  
+                  <hr>
+  
+                  <strong><i class="far fa-file-alt mr-1"></i>Contact number</strong>
+  
+                  <p class="text-muted">
+                    {{user.contact_number}}
+                  </p>
+                <button class="btn btn-primary span4 proj-div" data-toggle="modal" data-target="#edit-about"><b>Edit</b></button>
                 {% else %}
                 <strong><i class="far fa-file-alt mr-1"></i>Contact number</strong>
 
                 <p class="text-muted">
-
+                    {{user.contact_number}}
                 </p>    
-                <a href="#"><b>Edit</b></a>
+                <button class="btn btn-primary span4 proj-div" data-toggle="modal" data-target="#edit-about"><b>Edit</b></button>
                 {% endif %}
               </div>
                 
@@ -113,7 +134,77 @@
         <!-- /.row -->
       </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
+    <div id="edit-account" class="modal fade">
+      <div class="modal-dialog">
+         <div class="modal-content">
+         <form method='post' action="" class="">
+             {% csrf_token %}
+             <h4 class="modal-title">Edit About</h4>
+             <div class="modal-body">
+                 <div class="col-md-12">
+                     {{form1.username|as_crispy_field}}
+                 </div>
+                 <div class="col-md-12">
+                     {{form1.first_name|as_crispy_field}}
+                 </div>
+                 <div class="col-md-12">
+                     {{form1.middle_name|as_crispy_field}}
+                 </div>
+                 <div class="col-md-12">
+                     {{form1.last_name|as_crispy_field}}
+                 </div>
+                 <div class="col-md-12">
+                     {{form1.id_no|as_crispy_field}}
+                 </div>
+             </div>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 <button type="submit"  name="editAccount" class="btn btn-primary">Save changes</button>
+             </div>
+         </form>
+         </div>
+       </div>
+     </div>
+
+    <div id="edit-about" class="modal fade">
+     <div class="modal-dialog">
+        <div class="modal-content">
+        <form method='post' action="" class="">
+            {% csrf_token %}
+            <h4 class="modal-title">Edit About</h4>
+            {% if request.user.student %}
+            <div class="modal-body">
+                <div class="col-md-12">
+                    {{form.email_address|as_crispy_field}}
+                </div>
+                <div class="col-md-12">
+                    {{form.gender|as_crispy_field}}
+                </div>
+                <div class="col-md-12">
+                    {{form.birth_date|as_crispy_field}}
+                </div>
+                <div class="col-md-12">
+                    {{form.home_address|as_crispy_field}}
+                </div>
+                <div class="col-md-12">
+                    {{form.contact_number|as_crispy_field}}
+                </div>
+            </div>
+            {% else %}
+            <div class="modal-body">
+                <div class="col-md-12">
+                    {{form.contact_number|as_crispy_field}}
+                </div>
+            </div>
+            {% endif %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit"  name="editAbout" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+        </div>
+      </div>
+    </div>
   </div>
 
   {% endblock content %}

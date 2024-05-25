@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse, JsonResponse
-from .forms import LoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm,AdministratorRegistrationForm, StaffRegistrationForm, StudentRegistrationForm, RegistrationForm, DepartmentForm, CourseForm, CollegeForm, EnrollmentForm, RoomForm, SubjectForm, ClassScheduleForm, PropectuseForm, CoursePropectuseform
+from .forms import LoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm,AdministratorRegistrationForm, StaffRegistrationForm, StudentRegistrationForm, RegistrationForm, DepartmentForm, CourseForm, CollegeForm, EnrollmentForm, RoomForm, SubjectForm, ClassScheduleForm, PropectuseForm, CoursePropectuseform, StudentProfileForm, StaffProfileForm, AdministratorProfileForm,StudentAccountEditForm, StaffAccountEditForm,AadministratorAccountEditForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetConfirmView, PasswordResetView
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views
@@ -149,8 +149,68 @@ def student(request):
     return render(request, 'student/student_home.html')
 
 def user_profile(request):
+  if not request.user.is_authenticated:
+    return redirect("login")
+  else:
+        students = Student.objects.all()
+        staffs = Staff.objects.all()
+        administrators = Administrator.objects.all()
+        if request.user.student:
+                acc_id = get_object_or_404(User, pk=request.user.id)
+                user = get_object_or_404(Student, user = request.user.id)
+                form = StudentProfileForm(request.POST, instance=user)
+                form1 = StudentAccountEditForm(request.POST, instance=acc_id)
+                if(request.method == 'POST'):
+                    if 'editAbout' in request.POST:
+                        if form.is_valid():
+                            form.save()
+                            return redirect('user-profile')
+                    if 'editAccount' in request.POST:
+                        if form1.is_valid():
+                            form1.save()
+                            return redirect('user-profile')
+                else:    
+                        form = StudentProfileForm(instance=user)
+                        form1 = StudentAccountEditForm(instance=acc_id)
+        elif request.user.staff:
+                acc_id = get_object_or_404(User, pk=request.user.id)
+                user = get_object_or_404(Staff, user=request.user.id)
+                form = StaffProfileForm(request.POST, instance=user)
+                form1 = StaffAccountEditForm(request.POST, instance = acc_id)
+                if(request.method == 'POST'):
+                    if 'editAbout' in request.POST:
+                        if form.is_valid():
+                                form.save()
+                                return redirect('user-profile')
+                    elif 'editAccount' in request.POST:
+                          if form1.is_valid():
+                                form1.save()
+                                return redirect('user-profile')
+                else:    
+                        form = StaffProfileForm(instance=user)
+                        form1 = StaffAccountEditForm(instance=acc_id)
+        elif request.user.administrator:
+                acc_id = get_object_or_404(User, pk=request.user.id)
+                user = get_object_or_404(Administrator, user=request.user.id)
+                form = AdministratorProfileForm(request.POST, instance=user)
+                form1 = AadministratorAccountEditForm(request.POST, instance=acc_id)
+                if(request.method == 'POST'):
+                    if 'editAbout' in request.POST:
+                        if form.is_valid():
+                                form.save()
+                                return redirect('user-profile')
+                    elif 'editAccount' in request.POST:
+                          if form1.is_valid():
+                                form1.save()
+                                return redirect('user-profile')
+                else:    
+                        form = AdministratorProfileForm(instance=user)
+                        form1 = AadministratorAccountEditForm(instance=acc_id)
     
-    return render(request, 'accounts/user_profile.html')
+  return render(request, 'accounts/user_profile.html',{'form':form,'form1':form1,'user':user,'students':students, 'staffs':staffs,'administrators':administrators})
+
+
+
 
 #///////////////////////////////CRUDE ADMINISTRATOR/////////////////////////////////////////////////////////////
 
