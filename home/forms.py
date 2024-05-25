@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UsernameField, PasswordResetForm, SetPasswordForm
+<<<<<<< HEAD
 from django.db.models.fields import files
 from .models import Payment, User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator
 from django.forms import fields, widgets
@@ -7,6 +8,13 @@ from .models import User, Administrator_user, Staff_user, Student_user, \
                     College, Department, Course, Enrollment, Room, Subject, \
                     Class_Schedule, Prospectus, Course_Prospectus, Scholarship, \
                     Fees, EnrollmentDetail, SubjectTaken, Assessment, Payment
+=======
+from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator, Faculty_user, Faculty
+
+from django.forms import widgets
+from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
+
+>>>>>>> 66bb42bedcaf863c2505b3dc962fcb32d45bfe5c
 from django.utils.translation import gettext_lazy as _
 
 
@@ -198,6 +206,60 @@ class StudentRegistrationForm(UserCreationForm):
         fields = ('username','first_name','middle_name','last_name', 'password1', 'password2','id_no')
 
 
+class FacultyRegistrationForm(UserCreationForm):
+    id_no = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "ID number",
+                "class": "form-control"}))
+
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Username",
+                "class": "form-control"}))
+    
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                "placeholder": "Email",
+                "class": "form-control"}))
+    
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "First name",
+                "class": "form-control"}))
+    
+    middle_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Middle name",
+                "class": "form-control"}))
+    
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Last name",
+                "class": "form-control"}))
+    
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Password",
+                "class": "form-control"}))
+    
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Password check",
+                "class": "form-control"}))
+
+    class Meta:
+        model = Faculty_user
+        fields = ('username','first_name','middle_name','last_name', 'password1', 'password2','id_no')
+
+
 
 class LoginForm(forms.Form):
   username = UsernameField(label=_("Your Username"), widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Username"}))
@@ -293,13 +355,14 @@ class SubjectForm(forms.ModelForm):
 class ClassScheduleForm(forms.ModelForm):
     class Meta:
         model = Class_Schedule
-        fields = ['enrollment','subject','room','year_level','schedule']
+        fields = ['enrollment','subject','room','year_level','schedule','faculty']
         widgets = {
             'enrollment' : forms.Select(attrs={'class':'form-control'}),
             'subject' : forms.Select(attrs={'class':'form-control'}),
             'room' : forms.Select(attrs={'class':'form-control'}),
             'year_level' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Year level'}),
             'schedule' : forms.TextInput(attrs={'class':'form-control','placeholder':'Schedule (ie. TTH - 1:00PM-3:00PM, MWF - 7:00AM - 9:00AM'}),
+            'faculty' : forms.Select(attrs={'class':'form-control',}),
         }
 
 class PropectuseForm(forms.ModelForm):
