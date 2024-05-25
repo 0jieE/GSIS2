@@ -15,11 +15,13 @@
         <div class="col-md-12">
             {{form.subject|as_crispy_field}}
         </div>
-        <div class="col-md-12">
-            {{form.room|as_crispy_field}}
-        </div>
-        <div class="col-md-12">
-            {{form.year_level|as_crispy_field}}
+        <div class="col-md-12 row">
+            <div class="col-md-8">
+                {{form.room|as_crispy_field}}
+            </div>
+            <div class="col-md-4">
+                {{form.year_level|as_crispy_field}}
+            </div>
         </div>
         <div class="col-md-12">
             {{form.schedule|as_crispy_field}}

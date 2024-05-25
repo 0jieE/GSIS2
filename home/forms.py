@@ -289,6 +289,13 @@ class ClassScheduleForm(forms.ModelForm):
     class Meta:
         model = Class_Schedule
         fields = ['enrollment','subject','room','year_level','schedule']
+        widgets = {
+            'enrollment' : forms.Select(attrs={'class':'forms.controls-sm'}),
+            'subject' : forms.Select(attrs={'class':'forms-control-sm'}),
+            'room' : forms.Select(attrs={'class':'forms-control-sm'}),
+            'year_level' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Year level'}),
+            'schedule' : forms.TextInput(attrs={'class':'forms-control-sm','placeholder':'Schedule (ie. TTH - 1:00PM-3:00PM, MWF - 7:00AM - 9:00AM'}),
+        }
 
 class PropectuseForm(forms.ModelForm):
     class Meta:
