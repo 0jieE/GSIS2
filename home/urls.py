@@ -5,12 +5,15 @@ urlpatterns = [
      path("",views.index,name='index'),
 
      # Authentication
-     path('register-as-admin/', views.register_administrator, name='register-administrator'),
-     path('register-as-staff/', views.register_staff, name='register-staff'),
+     path('signup/administrator/', views.register_administrator, name='register-administrator'),
+     path('sigup/staff/', views.register_staff, name='register-staff'),
      path('register-as-student/', views.register_student, name='register-student'),
      path("login/",views.login_view,name='login'),
      path('logout', views.logout_view, name='signout'),
      path('accounts/register/', views.UserRegistrationView.as_view(), name='register'),
+
+     #user
+     path('account/profile', views.user_profile, name='profile'),
 
      #pages
      path("administrator/home",views.administrator,name='admin-home'),
