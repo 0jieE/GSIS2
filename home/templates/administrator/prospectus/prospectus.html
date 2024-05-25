@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Data Tables {% endblock title %}
+{% block title %} Prospectus {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -27,21 +27,22 @@
                     <div class="card">
                         <div class="card-header">
         
-                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-prospectus" data-toggle="modal" data-target="#new-prospectus" data-url="{% url "add-prospectus-admin" %}">add</button>
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-prospectus" data-toggle="modal" data-target="#new-prospectus" data-url="{% url "add-prospectus-admin" %}">Add new</button>
                         </div>
-                        
-                        <table id="prospectus-list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                  <th>Prospectus Name</th>
-                                  <th>Description</th>
-                                  <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              {% include "administrator/prospectus/list_prospectus.html" %}
-                            </tbody>
-                        </table>
+                        <div class="card-body p-10">
+                          <table id="prospectus-list" class="table table-bordered table-hover">
+                              <thead>
+                                  <tr>
+                                    <th>Prospectus Name</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% include "administrator/prospectus/list_prospectus.html" %}
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,6 +136,23 @@
   //delete prospectus
   $("#prospectus-list").on("click", ".js-delete-prospectus", loadform);
   $("#new-prospectus").on("submit", ".js-prospectus-delete-form", saveForm);
+
+  $(function () {
+    $("#prospectus-list").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#prospectus-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
 });
 
  

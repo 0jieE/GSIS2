@@ -12,11 +12,13 @@
         <div class="col-md-12">
             {{form.room_no|as_crispy_field}}
         </div>
-        <div class="col-md-12">
-            {{form.capacity|as_crispy_field}}
-        </div>
-        <div class="col-md-12">
-            {{form.room_type|as_crispy_field}}
+        <div class="col-md-12 row">
+            <div class="col-md-4">
+                {{form.capacity|as_crispy_field}}
+            </div>
+            <div class="col-md-8">
+                {{form.room_type|as_crispy_field}}
+            </div>
         </div>
         <div class="col-md-12">
             {{form.college|as_crispy_field}}

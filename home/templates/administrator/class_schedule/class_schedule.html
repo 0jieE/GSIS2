@@ -27,24 +27,25 @@
                     <div class="card">
                         <div class="card-header">
         
-                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-class_schedule" data-toggle="modal" data-target="#new-class_schedule" data-url="{% url "add-class_schedule-admin" %}">add</button>
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-class_schedule" data-toggle="modal" data-target="#new-class_schedule" data-url="{% url "add-class_schedule-admin" %}">Add new</button>
                         </div>
-                        
-                        <table id="class_schedule-list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                  <th>Enrollment</th>
-                                  <th>Subject</th>
-                                  <th>Room</th>
-                                  <th>Year Level</th>
-                                  <th>Schedule</th>
-                                  <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              {% include "administrator/class_schedule/list_class_schedule.html" %}
-                            </tbody>
-                        </table>
+                        <div class="card-body p-10">
+                          <table id="class_schedule-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Enrollment</th>
+                                    <th>Subject</th>
+                                    <th>Room</th>
+                                    <th>Year</th>
+                                    <th>Schedule</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% include "administrator/class_schedule/list_class_schedule.html" %}
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,6 +139,23 @@
   //delete class_schedule
   $("#class_schedule-list").on("click", ".js-delete-class_schedule", loadform);
   $("#new-class_schedule").on("submit", ".js-class_schedule-delete-form", saveForm);
+
+  $(function () {
+    $("#class_schedule-list").DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#class_schedule-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
 });
 
  

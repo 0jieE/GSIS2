@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Data Tables {% endblock title %}
+{% block title %} Rooms {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -27,23 +27,24 @@
                     <div class="card">
                         <div class="card-header">
         
-                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-room" data-toggle="modal" data-target="#new-room" data-url="{% url "add-room-admin" %}">add</button>
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-room" data-toggle="modal" data-target="#new-room" data-url="{% url "add-room-admin" %}">Add new</button>
                         </div>
-                        
-                        <table id="room-list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                  <th>Room NO</th>
-                                  <th>Capacity</th>
-                                  <th>Room Type</th>
-                                  <th>College</th>
-                                  <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              {% include "administrator/room/list_room.html" %}
-                            </tbody>
-                        </table>
+                        <div class='card-body p-10'>
+                          <table id="room-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Room No</th>
+                                    <th>Capacity</th>
+                                    <th>Room Type</th>
+                                    <th>College</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% include "administrator/room/list_room.html" %}
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,6 +138,23 @@
   //delete room
   $("#room-list").on("click", ".js-delete-room", loadform);
   $("#new-room").on("submit", ".js-room-delete-form", saveForm);
+
+  $(function () {
+    $("#room-list").DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#room-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
 });
 
  

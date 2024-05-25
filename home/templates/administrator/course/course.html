@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Data Tables {% endblock title %}
+{% block title %} Course {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -30,7 +30,7 @@
                           <button type="button" class="btn btn-sm btn-primary float-right  js-add-course" data-toggle="modal" data-target="#new-course" data-url="{% url "add-course-admin" %}">Add new</button>
                         </div>
                         
-                        <table id="course-list"  class="table table-bordered table-hover">
+                        <table id="course-list"  class="table table-bordered table-hover table-sm">
                             <thead>
                                 <tr>
                                   <th>Course Name</th>
@@ -138,6 +138,23 @@
   //delete course
   $("#course-list").on("click", ".js-delete-course", loadform);
   $("#new-course").on("submit", ".js-course-delete-form", saveForm);
+
+  $(function () {
+    $("#course-list").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#course-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
 });
 
  

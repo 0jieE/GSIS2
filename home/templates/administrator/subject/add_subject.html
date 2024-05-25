@@ -15,14 +15,19 @@
         <div class="col-md-12">
             {{form.descriptive_title|as_crispy_field}}
         </div>
-        <div class="col-md-12">
-            {{form.lecture_unit|as_crispy_field}}
+        <div class="col-md-12 row">
+            <div class="col-md-4">
+                {{form.lecture_unit|as_crispy_field}}
+            </div>
+            <div class="col-md-4">
+                {{form.laboratory_unit|as_crispy_field}}
+            </div>
+            <div class="col-md-4">
+                {{form.credit_unit|as_crispy_field}}
+            </div>
         </div>
         <div class="col-md-12">
-            {{form.laboratory_unit|as_crispy_field}}
-        </div>
-        <div class="col-md-12">
-            {{form.credit_unit|as_crispy_field}}
+            {{form.course|as_crispy_field}}
         </div>
     </div>
     <div class="modal-footer justify-content-between">

@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Data Tables {% endblock title %}
+{% block title %} Course Prospectus {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -27,18 +27,18 @@
                     <div class="card">
                       <div class="card-header">
       
-                        <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">add</button>
+                        <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">Add new</button>
                       </div>
-                      <div class="card-body p-0"> 
-                        <table id="course_prospectus-list"class="table table-bordered table-hover">
+                      <div class="card-body p-10"> 
+                        <table id="course_prospectus-list"class="table table-bordered table-hover table-sm">
                             <thead>
                                 <tr>
                                   <th>Prospectus</th>
                                   <th>Course</th>
                                   <th>subject</th>
-                                  <th>Pre Requisit</th>
-                                  <th>Semester</th>
-                                  <th>Year Level</th>
+                                  <th>Pre-Req</th>
+                                  <th>Sem</th>
+                                  <th>Year</th>
                                   <th>Action</th>
                                 </tr>
                             </thead>
@@ -53,7 +53,7 @@
         </div>
     </section>
     <div class="modal fade" id="new-course_prospectus">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
           </div>
           <!-- /.modal-content -->
@@ -143,19 +143,20 @@
 });
 
 $(function () {
-  $("#").DataTable({
-    "responsive": true, "lengthChange": false, "autoWidth": false,
-    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-  }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-  $('#').DataTable({
-    "paging": true,
-    "lengthChange": false,
-    "searching": true,
-    "ordering": true,
-    "info": true,
-    "autoWidth": false,
-    "responsive": true,
-  });
+  $("#course_prospectus-list").DataTable({
+    "responsive": true, "lengthChange": true, "autoWidth": false,
+    "buttons": ["csv", "excel", "pdf", "print"]
+    // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+  }).buttons().container().appendTo('#course_prospectus-list_wrapper .col-md-6:eq(0)');
+  // $('#course_prospectus-list').DataTable({
+  //  "paging": true,
+  //  "lengthChange": false,
+  //  "searching": true,
+  //  "ordering": true,
+  //  "info": true,
+  //  "autoWidth": false,
+  //  "responsive": true,
+  // });
 });
  
 </script>

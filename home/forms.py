@@ -1,6 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UsernameField, PasswordResetForm, SetPasswordForm
+<<<<<<< HEAD
 from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator
+=======
+from django.forms import widgets
+from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
+>>>>>>> 8ff5d1e291f5a023a7eeb40e481ffcc04725c747
 from django.utils.translation import gettext_lazy as _
 
 
@@ -53,19 +58,19 @@ class AdministratorRegistrationForm(UserCreationForm):
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "first_name",
+                "placeholder": "First name",
                 "class": "form-control"}))
     
     middle_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "middle_name",
+                "placeholder": "Middle name",
                 "class": "form-control"}))
     
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "last_name",
+                "placeholder": "Last name",
                 "class": "form-control"}))
     
     password1 = forms.CharField(
@@ -107,19 +112,19 @@ class StaffRegistrationForm(UserCreationForm):
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "first_name",
+                "placeholder": "First name",
                 "class": "form-control"}))
     
     middle_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "middle_name",
+                "placeholder": "Middle name",
                 "class": "form-control"}))
     
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "last_name",
+                "placeholder": "Last name",
                 "class": "form-control"}))
     
     password1 = forms.CharField(
@@ -160,19 +165,19 @@ class StudentRegistrationForm(UserCreationForm):
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "first_name",
+                "placeholder": "First name",
                 "class": "form-control"}))
     
     middle_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "middle_name",
+                "placeholder": "Middle name",
                 "class": "form-control"}))
     
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "last_name",
+                "placeholder": "Last name",
                 "class": "form-control"}))
     
     password1 = forms.CharField(
@@ -242,10 +247,11 @@ class CourseForm(forms.ModelForm):
         model = Course
         fields = ['course_name','short_name','course_description','course_period','department']
         widgets ={
-            'course_name' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Course name'}),
-            'short_name' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Short name'}),
-            'course_description' : forms.Textarea(attrs={'class':'forms-controls-sm', 'rows':3, 'placeholder':'Description'}),
-            'department' : forms.Select(attrs={'class':'forms-control-sm'}),
+            'course_name' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Course name'}),
+            'short_name' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Short name'}),
+            'course_period' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Period (i.e. 2)'}),
+            'course_description' : forms.Textarea(attrs={'class':'form-control', 'rows':3, 'placeholder':'Description'}),
+            'department' : forms.Select(attrs={'class':'form-control'}),
         }
 
 class EnrollmentForm(forms.ModelForm):
@@ -254,30 +260,55 @@ class EnrollmentForm(forms.ModelForm):
         model = Enrollment
         fields = ['enrollment_description','semester','school_year']
         widgets= {
-                'enrollment_description' : forms.Textarea(attrs={'class':'forms-control-sm', 'rows': 3, 'placeholder':'Description'}),
-                'semester': forms.Select(attrs={'class':'form-control-sm'}),
-                'school_year': forms.Select(attrs={'class':'form-control-sm'}),
+                'enrollment_description' : forms.Textarea(attrs={'class':'form-control', 'rows': 3, 'placeholder':'Description'}),
+                'semester': forms.Select(attrs={'class':'form-control'}),
+                'school_year': forms.Select(attrs={'class':'form-control'}),
             }
 
 class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = ['room_no','capacity','room_type','college']
+        widgets = {
+            'room_no' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Room no'}),
+            'capacity' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Capacity'}),
+            'room_type' : forms.Select(attrs={'class':'form-control'}),
+            'college' : forms.Select(attrs={'class':'form-control'}),
+        }
 
 class SubjectForm(forms.ModelForm):
     class Meta:
         model = Subject
-        fields = ['code','descriptive_title','lecture_unit','laboratory_unit','credit_unit']
+        fields = ['code','descriptive_title','lecture_unit','laboratory_unit','credit_unit', 'course']
+        widgets ={
+            'code' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Course code'}),
+            'descriptive_title' : forms.Textarea(attrs={'class':'form-control', 'rows':3, 'placeholder':'Descriptive title'}),
+            'lecture_unit' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Lec unit'}),
+            'laboratory_unit' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Lab unit'}),
+            'credit_unit' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Credit unit'}),
+            'course' : forms.Select(attrs={'class':'form-control'}),
+        }
 
 class ClassScheduleForm(forms.ModelForm):
     class Meta:
         model = Class_Schedule
         fields = ['enrollment','subject','room','year_level','schedule']
+        widgets = {
+            'enrollment' : forms.Select(attrs={'class':'form-control'}),
+            'subject' : forms.Select(attrs={'class':'form-control'}),
+            'room' : forms.Select(attrs={'class':'form-control'}),
+            'year_level' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Year level'}),
+            'schedule' : forms.TextInput(attrs={'class':'form-control','placeholder':'Schedule (ie. TTH - 1:00PM-3:00PM, MWF - 7:00AM - 9:00AM'}),
+        }
 
 class PropectuseForm(forms.ModelForm):
     class Meta:
         model = Prospectus
         fields = ['prospectus_name','description']
+        widgets = {
+            'prospectus_name' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Prospectus name'}),
+            'description':forms.Textarea(attrs={'class':'form-control', 'rows':3, 'placeholder':'Description'})
+        }
 
 class CoursePropectuseform(forms.ModelForm):
     class Meta:
