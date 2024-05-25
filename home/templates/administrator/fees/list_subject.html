@@ -1,0 +1,17 @@
+{%for s in subjects %}
+    <tr>
+        <td>{{s.code}}</td>
+        <td>{{s.descriptive_title}}</td>
+        <td>{{s.lecture_unit}}</td>
+        <td>{{s.laboratory_unit}}</td>
+        <td>{{s.credit_unit}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-subject" data-url="{% url "edit-subject-admin" s.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-subject" data-url="{% url "delete-subject-admin" s.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

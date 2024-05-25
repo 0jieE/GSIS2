@@ -7,10 +7,6 @@ from .models import User, Administrator_user, Staff_user, Student_user, \
                     College, Department, Course, Enrollment, Room, Subject, \
                     Class_Schedule, Prospectus, Course_Prospectus, Scholarship, \
                     Fees, EnrollmentDetail, SubjectTaken, Assessment, Payment
-<<<<<<< HEAD
-
-=======
->>>>>>> 654e483e081392676583d6069413195cc150cc05
 from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator, Faculty_user, Faculty
 
 from django.forms import widgets

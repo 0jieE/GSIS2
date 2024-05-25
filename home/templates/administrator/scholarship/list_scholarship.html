@@ -1,0 +1,15 @@
+{%for s in scholarship %}
+    <tr>
+        <td>{{s.scholarship_name}}</td>
+        <td>{{s.scholarship_description}}</td>
+        <td>{{s.scholarship_type}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="{% url "edit-scholarship-admin" s.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-scholarship" data-url="{% url "delete-scholarship-admin" s.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

@@ -2,12 +2,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse, JsonResponse
-from .forms import LoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm,AdministratorRegistrationForm, StaffRegistrationForm, StudentRegistrationForm, RegistrationForm, DepartmentForm, CourseForm, CollegeForm, EnrollmentForm, RoomForm, SubjectForm, ClassScheduleForm, PropectuseForm, CoursePropectuseform, StudentProfileForm, StaffProfileForm, AdministratorProfileForm,StudentAccountEditForm, StaffAccountEditForm,AadministratorAccountEditForm, FacultyRegistrationForm
+from .forms import LoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm,AdministratorRegistrationForm, StaffRegistrationForm, StudentRegistrationForm, RegistrationForm, DepartmentForm, CourseForm, CollegeForm, EnrollmentForm, RoomForm, SubjectForm, ClassScheduleForm, PropectuseForm, CoursePropectuseform, StudentProfileForm, StaffProfileForm, AdministratorProfileForm,StudentAccountEditForm, StaffAccountEditForm,AadministratorAccountEditForm, FacultyRegistrationForm, FeesForm, ScholarshipForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetConfirmView, PasswordResetView
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout, authenticate,login
-from .models import College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
+from .models import College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, SubjectTaken, Fees, Scholarship, EnrollmentDetail, SubjectTaken, Assessment, Payment
 
 
 from django.contrib.auth.decorators import login_required
@@ -45,6 +45,9 @@ def login_view(request):
                 login(request, user)
                 return redirect('/administrator/enrollment/list')
             elif user is not None and user.staff:
+                login(request, user)
+                return redirect('/administrator/enrollment/list')
+            elif user is not None and user.faculty:
                 login(request, user)
                 return redirect('/administrator/enrollment/list')
             elif user is not None and user.student:
@@ -831,3 +834,106 @@ def save_course_prospectus(request, form, template_name):
     context = {'form':form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
+
+
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#            Scholarship
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+def scholarship(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        scholarship = Scholarship.objects.all()
+        context = {
+              'parent':'',
+              'segment':'scholarship',
+              'scholarship':scholarship,        
+        }
+        return render(request, 'administrator/scholarship/scholarship.html',context)
+
+def add_scholarship(request):
+        if(request.method == 'POST'):
+                form = ScholarshipForm(request.POST)
+        else:    
+                form = ScholarshipForm()
+
+        return save_scholarship(request, form, 'administrator/scholarship/add_scholarship.html')
+
+
+def edit_scholarship(request,pk):
+        scholarship = get_object_or_404(Scholarship, pk=pk)
+        if(request.method == 'POST'):
+                form = ScholarshipForm(request.POST, instance=scholarship)
+        else:    
+                form = ScholarshipForm(instance=scholarship)
+        return save_scholarship(request, form, 'administrator/scholarship/edit_scholarship.html')
+
+
+def delete_scholarship(request,pk):
+        scholarship = get_object_or_404(Scholarship, pk=pk)
+        data = dict()
+        if request.method == 'POST':
+            scholarship.delete()
+            data['form_is_valid'] = True
+            scholarship= Scholarship.objects.all()
+            data['scholarship_list'] = render_to_string('administrator/scholarship/list_scholarship.html',{'scholarship':scholarship})
+        else:    
+            context = {'scholarship':scholarship}
+            data['html_form'] = render_to_string('administrator/scholarship/delete_scholarship.html',context,request=request)
+        return JsonResponse(data)
+
+
+def save_scholarship(request, form, template_name):
+    data = dict()
+    if form.is_valid():
+        form.save()
+        data['form_is_valid'] = True
+        scholarship= Scholarship.objects.all()
+        data['scholarship_list'] = render_to_string('administrator/scholarship/list_scholarship.html',{'scholarship':scholarship})
+    else:
+        data['form_is_valid'] = False
+
+    context = {'form':form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+
+
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #### 
+   #    #
+   #
+    ####
+        #
+   #    #
+    ####
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ######       
+   #    #
+   #
+   #####
+   #
+   #    
+   #
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+

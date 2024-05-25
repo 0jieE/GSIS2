@@ -1,0 +1,164 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Subjects {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Subjects</h1>
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+        
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-subject" data-toggle="modal" data-target="#new-subject" data-url="{% url "add-subject-admin" %}">Add new</button>
+                        </div>
+                        <div class="card-body p-10">
+                          <table id="subject-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Code</th>
+                                    <th>Descriptive Title</th>
+                                    <th>Lecture Unit</th>
+                                    <th>Laboratory Unit</th>
+                                    <th>Credit Unit</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% include "administrator/subject/list_subject.html" %}
+                              </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-subject">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+  $(function() 
+  {
+      var loadform = function() 
+        {
+          var btn = $(this);
+          console.log(btn.attr("data-url"));
+          $.ajax
+          ({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function()
+            {
+                $("#new-subject").modal("show");
+            },
+            success: function (data) {
+                $("#new-subject .modal-content").html(data.html_form);
+            }
+          });
+        };
+
+      var saveForm = function() 
+        {
+          var form = $(this);
+          $.ajax
+          ({
+            url: form.attr("action"),
+            data: form.serialize(),
+            type: form.attr("method"),
+            dataType: 'json',
+            success: function (data) 
+            {
+              if (data.form_is_valid) 
+              {
+                $("#subject-list tbody").html(data.subject_list);
+                $("#new-subject").modal("hide");
+              }
+              else 
+              {
+                $("#new-subject .modal-content").html(data.html_form);
+              }
+            }
+          });
+        return false;
+        }
+
+  //add subject
+  $(".js-add-subject").click(loadform);
+  $("#new-subject").on("submit",".js-subject-create-form", saveForm);
+  //edit subject
+  $("#subject-list").on("click", ".js-edit-subject", loadform);
+  $("#new-subject").on("submit", ".js-subject-edit-form", saveForm);
+  //delete subject
+  $("#subject-list").on("click", ".js-delete-subject", loadform);
+  $("#new-subject").on("submit", ".js-subject-delete-form", saveForm);
+
+
+  $(function () {
+    $("#subject-list").DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#subject-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
+});
+
+ 
+</script>
+{% endblock extra_scripts %}

@@ -75,4 +75,10 @@ urlpatterns = [
      path("administrator/course_prospectus/add",views.add_course_prospectus, name='add-course_prospectus-admin'),
      path('administrator/course_prospectus/<int:pk>/edit/', views.edit_course_prospectus, name='edit-course_prospectus-admin'),
      path('administrator/course_prospectus/<int:pk>/delete/', views.delete_course_prospectus, name='delete-course_prospectus-admin'),
+
+     #Scholarship
+     path("administrator/scholarship/list",views.scholarship, name='scholarship-admin'),
+     path("administrator/scholarship/add",views.add_scholarship, name='add-scholarship-admin'),
+     path('administrator/scholarship/<int:pk>/edit/', views.edit_scholarship, name='edit-scholarship-admin'),
+     path('administrator/scholarship/<int:pk>/delete/', views.delete_scholarship, name='delete-scholarship-admin'),
 ]
