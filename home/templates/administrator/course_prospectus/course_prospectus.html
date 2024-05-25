@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Data Tables {% endblock title %}
+{% block title %} Course Prospectus {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -29,7 +29,7 @@
       
                         <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">Add new</button>
                       </div>
-                      <div class="card-body p-0"> 
+                      <div class="card-body p-10"> 
                         <table id="course_prospectus-list"class="table table-bordered table-hover table-sm">
                             <thead>
                                 <tr>
@@ -144,7 +144,7 @@
 
 $(function () {
   $("#course_prospectus-list").DataTable({
-    "responsive": true, "lengthChange": false, "autoWidth": false,
+    "responsive": true, "lengthChange": true, "autoWidth": false,
     "buttons": ["csv", "excel", "pdf", "print"]
     // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
   }).buttons().container().appendTo('#course_prospectus-list_wrapper .col-md-6:eq(0)');

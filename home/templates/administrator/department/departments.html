@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Data Tables {% endblock title %}
+{% block title %} Department {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -29,20 +29,21 @@
         
                           <button type="button" class="btn btn-sm btn-primary float-right  js-add-department" data-toggle="modal" data-target="#new-department" data-url="{% url "add-department-admin" %}">Add new</button>
                         </div>
-                        
-                        <table id="department-list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                  <th>Department Name</th>
-                                  <th>Short Name</th>
-                                  <th>College</th>
-                                  <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              {% include "administrator/department/list_department.html" %}
-                            </tbody>
-                        </table>
+                        <div class="card-body p-10">
+                          <table id="department-list" class="table table-bordered table-hover">
+                              <thead>
+                                  <tr>
+                                    <th>Department Name</th>
+                                    <th>Short Name</th>
+                                    <th>College</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% include "administrator/department/list_department.html" %}
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
             </div>

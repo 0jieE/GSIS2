@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Data Tables {% endblock title %}
+{% block title %} Subjects {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -29,22 +29,23 @@
         
                           <button type="button" class="btn btn-sm btn-primary float-right  js-add-subject" data-toggle="modal" data-target="#new-subject" data-url="{% url "add-subject-admin" %}">Add new</button>
                         </div>
-                        
-                        <table id="subject-list" class="table table-bordered table-hover table-sm">
-                            <thead>
-                                <tr>
-                                  <th>Code</th>
-                                  <th>Descriptive Title</th>
-                                  <th>Lecture Unit</th>
-                                  <th>Laboratory Unit</th>
-                                  <th>Credit Unit</th>
-                                  <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              {% include "administrator/subject/list_subject.html" %}
-                            </tbody>
-                        </table>
+                        <div class="card-body p-10">
+                          <table id="subject-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Code</th>
+                                    <th>Descriptive Title</th>
+                                    <th>Lecture Unit</th>
+                                    <th>Laboratory Unit</th>
+                                    <th>Credit Unit</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% include "administrator/subject/list_subject.html" %}
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -142,7 +143,7 @@
 
   $(function () {
     $("#subject-list").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "responsive": true, "lengthChange": true, "autoWidth": false,
       "buttons": ["csv", "excel", "pdf", "print"]
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#subject-list_wrapper .col-md-6:eq(0)');

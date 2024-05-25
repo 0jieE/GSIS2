@@ -22,7 +22,17 @@
           {{field}}
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas {% if field.name == 'username' %} fa-user {% else %} {% if field.name == 'email' %} fa-envelope {% else %} fa-lock {% endif %} {% endif %}"></span>
+              <span class="fas {% if field.name == 'username' %} fa-user {% else %} 
+                                  {% if field.name == 'email' %} fa-envelope  {% else %} 
+                                    {% if field.name == 'first_name' %} fa-user {% else %}
+                                      {% if field.name == 'middle_name' %} fa-user {% else %} 
+                                        {% if field.name == 'last_name' %} fa-user {% else %} 
+                                          fa-lock
+                                        {% endif %}
+                                      {% endif %}
+                                    {% endif %} 
+                                  {% endif %} 
+                                {% endif %} "></span>
             </div>
           </div>
         </div>
