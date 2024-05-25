@@ -219,15 +219,18 @@ class Room(models.Model):
         return template.format(self)
 
 class Subject(models.Model):
-    code = models.CharField(max_length=50)
-    descriptive_title = models.CharField(max_length=50)
+    code = models.CharField(max_length=50, unique=True)
+    descriptive_title = models.CharField(max_length=250)
     lecture_unit = models.DecimalField(decimal_places = 2, max_digits = 4)
     laboratory_unit = models.DecimalField(decimal_places = 2, max_digits = 4)
     credit_unit = models.DecimalField(decimal_places = 2, max_digits = 4)
+    course = models.ForeignKey(Course, related_name='subject_course', on_delete=models.CASCADE)
 
     def __str__(self):
         template = '{0.code} {0.descriptive_title}'
+        # template = '{0.code}'
         return template.format(self)
+        # return f'{self.code} - {self.descriptive_title}'
 
 class Class_Schedule(models.Model):
     enrollment = models.ForeignKey(Enrollment, related_name = 'enrollment_class_schedule', on_delete = models.CASCADE)
@@ -241,8 +244,8 @@ class Class_Schedule(models.Model):
         return template.format(self)
 
 class Prospectus(models.Model):
-    prospectus_name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
+    prospectus_name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=250)
 
     def __str__(self):
         template = '{0.prospectus_name}'
@@ -250,10 +253,10 @@ class Prospectus(models.Model):
 
 
 class Course_Prospectus(models.Model):
-    FIRST = '1st Semester'
-    SECOND = '2nd Semester'
+    FIRST = '1st'
+    SECOND = '2nd'
     SUMMER = 'Summer'
-    SEMESTER = ((FIRST, '1st Semester'), (SECOND,'2nd Semester'), (SUMMER, 'Summer'))
+    SEMESTER = ((FIRST, '1st'), (SECOND,'2nd'), (SUMMER, 'Summer'))
 
     FIRST_YEAR = '1st Year'
     SECOND_YEAR = '2nd Year'
@@ -268,11 +271,11 @@ class Course_Prospectus(models.Model):
     prospectus = models.ForeignKey(Prospectus, related_name = 'course_prospectus_name', on_delete=models.CASCADE)
     course = models.ForeignKey(Course, related_name = 'prospectuse_course_name', on_delete = models.CASCADE)
     subject = models.ForeignKey(Subject, related_name = 'prospectus_subject_name', on_delete = models.CASCADE)
-    pre_requisit1 = models.ForeignKey(Subject, related_name = 'subject_prereq1', on_delete = models.CASCADE)
-    pre_requisit2 = models.ForeignKey(Subject, related_name = 'subject_prereq2', on_delete = models.CASCADE)
-    pre_requisit3 = models.ForeignKey(Subject, related_name = 'subject_prereq3', on_delete = models.CASCADE)
-    pre_requisit4 = models.ForeignKey(Subject, related_name = 'subject_prereq4', on_delete = models.CASCADE)
-    pre_requisit5 = models.ForeignKey(Subject, related_name = 'subject_prereq5', on_delete = models.CASCADE)
+    pre_requisit1 = models.ForeignKey(Subject, related_name = 'subject_prereq1', on_delete = models.CASCADE, null=True, blank=True)
+    pre_requisit2 = models.ForeignKey(Subject, related_name = 'subject_prereq2', on_delete = models.CASCADE, null=True, blank=True)
+    pre_requisit3 = models.ForeignKey(Subject, related_name = 'subject_prereq3', on_delete = models.CASCADE, null=True, blank=True)
+    pre_requisit4 = models.ForeignKey(Subject, related_name = 'subject_prereq4', on_delete = models.CASCADE, null=True, blank=True)
+    pre_requisit5 = models.ForeignKey(Subject, related_name = 'subject_prereq5', on_delete = models.CASCADE, null=True, blank=True)
     semester = models.CharField(max_length=20, choices=SEMESTER, default=FIRST)
     year_level = models.CharField(max_length=20, choices=YEAR_LEVEL, default=FIRST_YEAR)
 

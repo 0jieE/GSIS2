@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UsernameField, PasswordResetForm, SetPasswordForm
+from django.forms import widgets
 from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
 from django.utils.translation import gettext_lazy as _
 
@@ -244,6 +245,7 @@ class CourseForm(forms.ModelForm):
         widgets ={
             'course_name' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Course name'}),
             'short_name' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Short name'}),
+            'course_period' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Course period'}),
             'course_description' : forms.Textarea(attrs={'class':'forms-controls-sm', 'rows':3, 'placeholder':'Description'}),
             'department' : forms.Select(attrs={'class':'forms-control-sm'}),
         }
@@ -267,7 +269,15 @@ class RoomForm(forms.ModelForm):
 class SubjectForm(forms.ModelForm):
     class Meta:
         model = Subject
-        fields = ['code','descriptive_title','lecture_unit','laboratory_unit','credit_unit']
+        fields = ['code','descriptive_title','lecture_unit','laboratory_unit','credit_unit', 'course']
+        widgets ={
+            'code' : forms.TextInput(attrs={'class':'forms-controls-sm', 'placeholder':'Course code'}),
+            'descriptive_title' : forms.Textarea(attrs={'class':'forms-control.sm', 'rows':3, 'placeholder':'Descriptive title'}),
+            'lecture_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Lecture unit'}),
+            'laboratory_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Laboratory unit'}),
+            'credit_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Credit unit'}),
+            'course' : forms.Select(attrs={'class':'forms-controls-sm'}),
+        }
 
 class ClassScheduleForm(forms.ModelForm):
     class Meta:
@@ -278,6 +288,10 @@ class PropectuseForm(forms.ModelForm):
     class Meta:
         model = Prospectus
         fields = ['prospectus_name','description']
+        widgets = {
+            'prospectus_name' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Prospectus name'}),
+            'description':forms.Textarea(attrs={'class':'forms-control-sm', 'rows':3, 'placeholder':'Description'})
+        }
 
 class CoursePropectuseform(forms.ModelForm):
     class Meta:

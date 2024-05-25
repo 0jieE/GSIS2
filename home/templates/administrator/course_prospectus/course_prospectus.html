@@ -27,7 +27,7 @@
                     <div class="card">
                       <div class="card-header">
       
-                        <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">add</button>
+                        <button type="button" class="btn btn-sm btn-primary float-right  js-add-course_prospectus" data-toggle="modal" data-target="#new-course_prospectus" data-url="{% url "add-course_prospectus-admin" %}">Add new</button>
                       </div>
                       <div class="card-body p-0"> 
                         <table id="course_prospectus-list"class="table table-bordered table-hover">
@@ -36,9 +36,9 @@
                                   <th>Prospectus</th>
                                   <th>Course</th>
                                   <th>subject</th>
-                                  <th>Pre Requisit</th>
-                                  <th>Semester</th>
-                                  <th>Year Level</th>
+                                  <th>Pre-Req</th>
+                                  <th>Sem</th>
+                                  <th>Year</th>
                                   <th>Action</th>
                                 </tr>
                             </thead>
@@ -143,19 +143,20 @@
 });
 
 $(function () {
-  $("#").DataTable({
+  $("#course_prospectus-list").DataTable({
     "responsive": true, "lengthChange": false, "autoWidth": false,
-    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-  }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-  $('#').DataTable({
-    "paging": true,
-    "lengthChange": false,
-    "searching": true,
-    "ordering": true,
-    "info": true,
-    "autoWidth": false,
-    "responsive": true,
-  });
+    "buttons": ["csv", "excel", "pdf", "print"]
+    // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+  }).buttons().container().appendTo('#course_prospectus-list_wrapper .col-md-6:eq(0)');
+  // $('#course_prospectus-list').DataTable({
+  //  "paging": true,
+  //  "lengthChange": false,
+  //  "searching": true,
+  //  "ordering": true,
+  //  "info": true,
+  //  "autoWidth": false,
+  //  "responsive": true,
+  // });
 });
  
 </script>
