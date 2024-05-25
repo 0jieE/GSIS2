@@ -1,6 +1,9 @@
 
+from typing import Type
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
+from django.db.models.deletion import DO_NOTHING
+from django.db.models.lookups import YearComparisonLookup
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -286,3 +289,71 @@ class Course_Prospectus(models.Model):
     pre_requisit5 = models.ForeignKey(Subject, related_name = 'subject_prereq5', on_delete = models.CASCADE, null=True, blank=True)
     semester = models.CharField(max_length=20, choices=SEMESTER, default=FIRST)
     year_level = models.CharField(max_length=20, choices=YEAR_LEVEL, default=FIRST_YEAR)
+
+class Scholarship(models.Model):
+    FULL = 'Full'
+    HALF = 'Half'
+    NONE = 'None'
+    TYPE = (
+        (FULL, 'Full'), (HALF, 'Half'), (NONE, 'None')
+    )
+    scholarship_name = models.CharField(max_length=250)
+    scholarship_description = models.CharField(max_length=250)
+    scholarship_type = models.CharField(max_length=20, choices=TYPE, default=None)
+
+class Fees(models.Model):
+    fee_name = models.CharField(max_length=100, unique=True)
+    fee_amount = models.DecimalField(decimal_places = 2, max_digits = 5)
+    is_multiplier = models.BooleanField(default=False)
+
+class EnrollmentDetail(models.Model):
+    OLD = 'Old Continuing'
+    NEW = 'New'
+    OS = 'OS'
+    TYPE = (
+        (OLD, 'Old Continuing'), (NEW, 'New'), (OS, 'OS')
+    )
+
+    FIRST = '1'
+    SECOND = '2'
+    THIRD = '3'
+    FOURTH = '4'
+    YEAR = (
+        (FIRST, '1'), (SECOND, '2'), (THIRD, '3'), (FOURTH, '4')
+    )
+
+    ENR = 'Enrolled'
+    PRE = 'Pre-Enrolled'
+    DRP = 'Dropped'
+    PEN = 'Pending'
+    STATUS = (
+        (ENR, 'Enrolled'), (PRE, 'Pre-Enrolled'), (DRP, 'Dropped'), (PEN, 'Pending')
+    )
+    student_type = models.CharField(max_length=20, choices=TYPE, default=NEW)
+    student_year = models.CharField(max_length=10, choices=YEAR, default=FIRST)
+    course_id = models.ForeignKey(Course, related_name='enrollment_detail_course', on_delete=models.DO_NOTHING)
+    scholarship_id = models.ForeignKey(Scholarship, related_name='enrollment_detail_scholarship', on_delete=models.DO_NOTHING)
+    enrollment_status = models.CharField(max_length=20, choices=STATUS, default=PEN)
+    
+class SubjectTaken(models.Model):
+    schedule_id = models.ForeignKey(Class_Schedule, related_name='subject_taken_schedule', on_delete=DO_NOTHING)
+    enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail', on_delete=models.CASCADE)
+    is_pre_enroll = models.BooleanField(default=False)
+    is_registered = models.BooleanField(default=False)
+    is_dropped = models.BooleanField(default=False)
+    midterm_grade = models.CharField(max_length=20)
+    final_grade = models.CharField(max_length=20)
+    final_re_grade = models.CharField(max_length=20)
+
+class Assessment(models.Model):
+    enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail', on_delete=models.CASCADE)
+    fee_id = models.ForeignKey(Fees, related_name='fees', on_delete=models.CASCADE)
+    fee_amount = models.DecimalField(decimal_places=2, max_digits=7)
+    is_paid = models.BooleanField(default=False)
+
+class Payment(models.Model):
+    enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail', on_delete=models.CASCADE)
+    or_no = models.CharField(max_length=20)
+    or_date = models.DateTimeField(auto_created=False)
+    or_amount = models.DecimalField(decimal_places=2, max_digits=7)
+

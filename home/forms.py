@@ -1,11 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UsernameField, PasswordResetForm, SetPasswordForm
-<<<<<<< HEAD
-from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator
-=======
-from django.forms import widgets
-from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
->>>>>>> 8ff5d1e291f5a023a7eeb40e481ffcc04725c747
+from django.db.models.fields import files
+from .models import Payment, User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator
+from django.forms import fields, widgets
+from .models import User, Administrator_user, Staff_user, Student_user, \
+                    College, Department, Course, Enrollment, Room, Subject, \
+                    Class_Schedule, Prospectus, Course_Prospectus, Scholarship, \
+                    Fees, EnrollmentDetail, SubjectTaken, Assessment, Payment
 from django.utils.translation import gettext_lazy as _
 
 
@@ -314,6 +315,60 @@ class CoursePropectuseform(forms.ModelForm):
     class Meta:
         model = Course_Prospectus
         fields = ['prospectus','course','subject','pre_requisit1','pre_requisit2','pre_requisit3','pre_requisit4','pre_requisit5','semester','year_level']
+
+class ScholarshipForm(forms.ModelForm):
+    class Meta:
+        model = Scholarship
+        fields = ['scholarship_name', 'scholarship_description', 'scholarship_type']
+        widgets = {
+            'scholarship_name' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Scholarship'}),
+            'scholarship_description' : forms.Textarea(attrs={'class':'form-control', 'row':3, 'placeholder':'Description'}),
+            'scholarship_type' : forms.Select(attrs={'class':'form-control'})
+        }
+
+class FeesForm(forms.ModelForm):
+    class Meta:
+        model = Fees
+        fields = ['fee_name', 'fee_amount', 'is_multiplier']
+        widgets = {
+            'fee_name' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Fee name'}),
+            'fee_amount' : forms.NumberInput(attrs={'class':'form-control', 'placeholder': 'Amount'}),
+            'is_multiplier' : forms.CheckboxInput(attrs={'class':'form-control'})
+        }
+
+class EnrollmentDetailForm(forms.ModelForm):
+    class Meta:
+        model = EnrollmentDetail
+        fields = ['student_type', 'student_year', 'course_id', 'scholarship_id', 'enrollment_status']
+        widgets = {
+            'student_type' : forms.Select(attrs={'class':'form-control'}),
+            'student_year' : forms.Select(attrs={'class':'form-control'}),
+            'course_id' : forms.Select(attrs={'class':'form-control'}),
+            'scholarhip_id' : forms.Select(attrs={'class':'form-control'}),
+            'enrollment_status' : forms.Select(attrs={'class':'form-control'})
+        }
+
+class SubjectTakenForm(forms.ModelForm):
+    class Meta:
+        model = SubjectTaken
+        fields = ['schedule_id', 'enrollment_detail_id', 'is_dropped', 'midterm_grade', 'final_grade', 'final_re_grade']
+
+class AssessmentForm(forms.ModelForm):
+    class Meta:
+        model = Assessment
+        fields = ['enrollment_detail_id', 'fee_id', 'fee_amount', 'is_paid']
+
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = ['enrollment_detail_id', 'or_no', 'or_date', 'or_amount']
+        widgets = {
+            'enrollment_detail_id' : forms.Select(attrs={'class':'form-control'}),
+            'or_no' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'OR no'}),
+            'or_date' : forms.DateTimeInput(attrs={'class':'form-control'}),
+        }
+
+# user profiles
 
 class StudentProfileForm(forms.ModelForm):
     class Meta:
