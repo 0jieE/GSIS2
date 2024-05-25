@@ -3,7 +3,6 @@ from typing import Type
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.db.models.deletion import DO_NOTHING
-from django.db.models.lookups import YearComparisonLookup
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -403,13 +402,13 @@ class SubjectTaken(models.Model):
     final_re_grade = models.CharField(max_length=20)
 
 class Assessment(models.Model):
-    enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail', on_delete=models.CASCADE)
+    enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail_assessment', on_delete=models.CASCADE)
     fee_id = models.ForeignKey(Fees, related_name='fees', on_delete=models.CASCADE)
     fee_amount = models.DecimalField(decimal_places=2, max_digits=7)
     is_paid = models.BooleanField(default=False)
 
 class Payment(models.Model):
-    enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail', on_delete=models.CASCADE)
+    enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail_payment', on_delete=models.CASCADE)
     or_no = models.CharField(max_length=20)
     or_date = models.DateTimeField(auto_created=False)
     or_amount = models.DecimalField(decimal_places=2, max_digits=7)
