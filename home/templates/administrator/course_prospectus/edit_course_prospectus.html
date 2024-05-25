@@ -18,6 +18,14 @@
         <div class="col-md-12">
             {{form.subject|as_crispy_field}}
         </div>
+        <div class="col-md-12 row">
+            <div class="col-md-6">
+                {{form.year_level|as_crispy_field}}
+            </div>
+            <div class="col-md-6">
+                {{form.semester|as_crispy_field}}
+            </div>
+        </div>
         <div class="col-md-12">
             {{form.pre_requisit1|as_crispy_field}}
         </div>
@@ -32,12 +40,6 @@
         </div>
         <div class="col-md-12">
             {{form.pre_requisit5|as_crispy_field}}
-        </div>
-        <div class="col-md-12">
-            {{form.semester|as_crispy_field}}
-        </div>
-        <div class="col-md-12">
-            {{form.year_level|as_crispy_field}}
         </div>
     </div>
     <div class="modal-footer justify-content-between">

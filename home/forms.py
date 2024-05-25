@@ -245,7 +245,7 @@ class CourseForm(forms.ModelForm):
         widgets ={
             'course_name' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Course name'}),
             'short_name' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Short name'}),
-            'course_period' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Course period'}),
+            'course_period' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Period (i.e. 2)'}),
             'course_description' : forms.Textarea(attrs={'class':'forms-controls-sm', 'rows':3, 'placeholder':'Description'}),
             'department' : forms.Select(attrs={'class':'forms-control-sm'}),
         }
@@ -273,8 +273,8 @@ class SubjectForm(forms.ModelForm):
         widgets ={
             'code' : forms.TextInput(attrs={'class':'forms-controls-sm', 'placeholder':'Course code'}),
             'descriptive_title' : forms.Textarea(attrs={'class':'forms-control.sm', 'rows':3, 'placeholder':'Descriptive title'}),
-            'lecture_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Lecture unit'}),
-            'laboratory_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Laboratory unit'}),
+            'lecture_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Lec unit'}),
+            'laboratory_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Lab unit'}),
             'credit_unit' : forms.NumberInput(attrs={'class':'forms-control-sm', 'placeholder':'Credit unit'}),
             'course' : forms.Select(attrs={'class':'forms-controls-sm'}),
         }

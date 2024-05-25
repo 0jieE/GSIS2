@@ -135,6 +135,23 @@
   //delete prospectus
   $("#prospectus-list").on("click", ".js-delete-prospectus", loadform);
   $("#new-prospectus").on("submit", ".js-prospectus-delete-form", saveForm);
+
+  $(function () {
+    $("#prospectus-list").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#prospectus-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
 });
 
  

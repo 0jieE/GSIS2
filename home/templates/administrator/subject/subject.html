@@ -27,10 +27,10 @@
                     <div class="card">
                         <div class="card-header">
         
-                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-subject" data-toggle="modal" data-target="#new-subject" data-url="{% url "add-subject-admin" %}">add</button>
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-subject" data-toggle="modal" data-target="#new-subject" data-url="{% url "add-subject-admin" %}">Add new</button>
                         </div>
                         
-                        <table id="subject-list" class="table table-bordered table-hover">
+                        <table id="subject-list" class="table table-bordered table-hover table-sm">
                             <thead>
                                 <tr>
                                   <th>Code</th>
@@ -138,6 +138,24 @@
   //delete subject
   $("#subject-list").on("click", ".js-delete-subject", loadform);
   $("#new-subject").on("submit", ".js-subject-delete-form", saveForm);
+
+
+  $(function () {
+    $("#subject-list").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#subject-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
 });
 
  
