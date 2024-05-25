@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UsernameField, PasswordResetForm, SetPasswordForm
-<<<<<<< HEAD
 from django.db.models.fields import files
 from .models import Payment, User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator
 from django.forms import fields, widgets
@@ -8,13 +7,12 @@ from .models import User, Administrator_user, Staff_user, Student_user, \
                     College, Department, Course, Enrollment, Room, Subject, \
                     Class_Schedule, Prospectus, Course_Prospectus, Scholarship, \
                     Fees, EnrollmentDetail, SubjectTaken, Assessment, Payment
-=======
+
 from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, Student, Staff, Administrator, Faculty_user, Faculty
 
 from django.forms import widgets
 from .models import User, Administrator_user, Staff_user, Student_user, College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
 
->>>>>>> 66bb42bedcaf863c2505b3dc962fcb32d45bfe5c
 from django.utils.translation import gettext_lazy as _
 
 
