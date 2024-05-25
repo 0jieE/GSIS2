@@ -19,16 +19,18 @@ class User (AbstractUser,PermissionsMixin):
     staff = models.BooleanField(default = False)
     student = models.BooleanField(default = False)
     administrator = models.BooleanField(default = False)
+    faculty = models.BooleanField(default = False)
 
     def __str__(self):
         template = '{0.first_name} {0.middle_name} {0.last_name}'
         return template.format(self)
-
+# ---------------------------------------------------------------------------------------------------------
+# ------------------administrator user---------------------------------------------------------------------
 
 class Administrator_user_manager(BaseUserManager):
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset( *args, **kwargs)
-        return results.filter(Administrator = True)
+        return results.filter(administrator = True)
     
 class Administrator_user(User):
     user = Administrator_user_manager()
@@ -38,6 +40,7 @@ class Administrator_user(User):
 
     def save(self, *args, **kwargs):
         if not self.pk:
+            self.faculty = False
             self.administrator = True
             self.staff = False
             self.student = False
@@ -54,10 +57,46 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.administrator == True:
         Administrator.objects.create(user=instance)
 
+
+# ---------------------------------------------------------------------------------------------------------
+# ------------------faculty user---------------------------------------------------------------------
+
+class Faculty_user_manager(BaseUserManager):
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset( *args, **kwargs)
+        return results.filter(faculty = True)
+    
+class Faculty_user(User):
+    user = Faculty_user_manager()
+
+    class Meta:
+        proxy = True
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.faculty = True
+            self.administrator = False
+            self.staff = False
+            self.student = False
+            self.is_staff = True
+            self.is_active = True
+            self.is_superuser = False
+            return super().save(*args, **kwargs)
+
+    def welcome(self):
+        return "Only for faculty user"
+    
+@receiver(post_save, sender= Faculty_user)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created and instance.faculty == True:
+        Faculty.objects.create(user=instance)
+
+# --------------------------------------------------------------------------------------------------------
+# -------------------------Staff user--------------------------------------------------------------------------
 class Staff_user_manager(BaseUserManager):
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset( *args, **kwargs)
-        return results.filter(Staff = True)
+        return results.filter(staff = True)
     
 class Staff_user(User):
     user = Staff_user_manager()
@@ -67,6 +106,7 @@ class Staff_user(User):
 
     def save(self, *args, **kwargs):
         if not self.pk:
+            self.faculty = False
             self.administrator = False
             self.staff = True
             self.student = False
@@ -84,6 +124,9 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.staff == True:
         Staff.objects.create(user=instance)
 
+# --------------------------------------------------------------------------------------------------------------------
+# --------------------------student_user------------------------------------------------------------------------------
+
 class Student_user_manager(BaseUserManager):
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset( *args, **kwargs)
@@ -97,6 +140,7 @@ class Student_user(User):
 
     def save(self, *args, **kwargs):
         if not self.pk:
+            self.faculty = False
             self.administrator = False
             self.staff = False
             self.student = True
@@ -120,6 +164,18 @@ class Administrator(models.Model):
     contact_number = models.CharField(max_length=50, blank = True, null = True)
     picture = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=None, null = True, blank = True)
     updated_on = models.DateField(auto_now_add = True)
+
+class Faculty(models.Model):
+    user = models.ForeignKey(User, related_name = 'faculty_user_id', on_delete = models.CASCADE)
+    contact_number = models.CharField(max_length=50, blank = True, null = True)
+    faculty_title = models.CharField(max_length=50, blank = True, null = True)
+    faculty_position = models.CharField(max_length=50, blank = True, null = True)
+    picture = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=None, null = True, blank = True)
+    updated_on = models.DateField(auto_now_add = True)
+
+    def __str__(self):
+        template = '{0.user}'
+        return template.format(self)
 
 class Staff(models.Model):
     user = models.ForeignKey(User, related_name = 'staff_user_id', on_delete = models.CASCADE)
@@ -246,6 +302,7 @@ class Class_Schedule(models.Model):
     room = models.ForeignKey(Room, related_name = 'room_class_schedule', on_delete = models.CASCADE)
     year_level = models.CharField(max_length=50)
     schedule = models.CharField(max_length=50)
+    faculty = models.ForeignKey(Faculty,related_name='faculty_class_schedule',on_delete = models.CASCADE)
 
     def __str__(self):
         template = '{0.subject}'
