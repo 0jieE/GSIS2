@@ -265,6 +265,12 @@ class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = ['room_no','capacity','room_type','college']
+        widgets = {
+            'room_no' : forms.TextInput(attrs={'class':'forms-control-sm', 'placeholder':'Room no'}),
+            'capacity' : forms.NumberInput(attrs={'class':'forms-controls-sm', 'placeholder':'Capacity'}),
+            'room_type' : forms.Select(attrs={'class':'forms-control-sm'}),
+            'college' : forms.Select(attrs={'class':'forms-control-sm'}),
+        }
 
 class SubjectForm(forms.ModelForm):
     class Meta:

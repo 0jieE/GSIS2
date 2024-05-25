@@ -209,9 +209,15 @@ class Enrollment(models.Model):
         return template.format(self)
 
 class Room(models.Model):
+    # updated
+    LEC = 'Lecture'
+    LAB = 'Laboratory'
+    ROOOM = (
+        (LEC, 'Lecture'), (LAB, 'Laboratory')
+    )
     room_no = models.CharField(max_length=50)
-    capacity = models.CharField(max_length=50)
-    room_type = models.CharField(max_length=50)
+    capacity = models.IntegerField()
+    room_type = models.CharField(max_length=50, choices=ROOOM, default=LEC)
     college = models.ForeignKey(College, related_name = 'college_room', on_delete = models.CASCADE )
 
     def __str__(self):
