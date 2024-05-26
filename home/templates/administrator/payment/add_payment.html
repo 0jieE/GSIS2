@@ -1,33 +1,25 @@
 {%load crispy_forms_tags%}
 
-<form method='post' action="{%url 'add-subject-admin'%}" class="js-subject-create-form" enctype="multipart/form-data">
+<form method='post' action="{%url 'add-payment-admin'%}" class="js-payment-create-form" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="modal-header">
-        <h4 class="modal-title">Add subject</h4>
+        <h4 class="modal-title">Add payment</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div class="col-md-12">
-            {{form.code|as_crispy_field}}
+            {{form.enrollment_detail_id|as_crispy_field}}
         </div>
         <div class="col-md-12">
-            {{form.descriptive_title|as_crispy_field}}
-        </div>
-        <div class="col-md-12 row">
-            <div class="col-md-4">
-                {{form.lecture_unit|as_crispy_field}}
-            </div>
-            <div class="col-md-4">
-                {{form.laboratory_unit|as_crispy_field}}
-            </div>
-            <div class="col-md-4">
-                {{form.credit_unit|as_crispy_field}}
-            </div>
+            {{form.or_no|as_crispy_field}}
         </div>
         <div class="col-md-12">
-            {{form.course|as_crispy_field}}
+            {{form.or_date|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
+            {{form.or_amount|as_crispy_field}}
         </div>
     </div>
     <div class="modal-footer justify-content-between">

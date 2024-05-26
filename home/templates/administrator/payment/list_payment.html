@@ -1,0 +1,16 @@
+{%for p in payment %}
+    <tr>
+        <td>{{p.enrollment_detail_id}}</td>
+        <td>{{p.or_no}}</td>
+        <td>{{p.or_date}}</td>
+        <td>{{p.or_amount}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-payment" data-url="{% url "edit-payment-admin" p.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-payment" data-url="{% url "delete-payment-admin" p.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

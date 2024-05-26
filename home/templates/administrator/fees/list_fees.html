@@ -1,0 +1,15 @@
+{%for f in fees %}
+    <tr>
+        <td>{{f.fee_name}}</td>
+        <td>{{f.fee_amount}}</td>
+        <td>{{f.is_multiplier}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-fees" data-url="{% url "edit-fees-admin" f.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-fees" data-url="{% url "delete-fees-admin" f.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

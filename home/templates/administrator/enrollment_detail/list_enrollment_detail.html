@@ -1,0 +1,17 @@
+{%for e in enrollment_detail %}
+    <tr>
+        <td>{{e.student_type}}</td>
+        <td>{{e.student_year}}</td>
+        <td>{{e.course_id}}</td>
+        <td>{{e.scholarship_id}}</td>
+        <td>{{e.enrollment_status}}</td>
+        <td>
+            <button class="btn btn-primary btn-sm js-edit-enrollment_detail" data-url="{% url "edit-enrollment_detail-admin" e.pk%}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger js-delete-enrollment_detail" data-url="{% url "delete-enrollment_detail-admin" e.pk%}">
+                Delete
+            </button>
+        </td>
+    </tr>
+{%endfor%}

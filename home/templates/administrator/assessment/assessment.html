@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Subjects {% endblock title %}
+{% block title %} ASSESSMENT {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Subjects</h1>
+            <h1>Assessment</h1>
           </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -27,22 +27,21 @@
                     <div class="card">
                         <div class="card-header">
         
-                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-subject" data-toggle="modal" data-target="#new-subject" data-url="{% url "add-subject-admin" %}">Add new</button>
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-assessment" data-toggle="modal" data-target="#new-assessment" data-url="{% url "add-assessment-admin" %}">Add new</button>
                         </div>
                         <div class="card-body p-10">
-                          <table id="subject-list" class="table table-bordered table-hover table-sm">
+                          <table id="assessment-list" class="table table-bordered table-hover table-sm">
                               <thead>
                                   <tr>
-                                    <th>Code</th>
-                                    <th>Descriptive Title</th>
-                                    <th>Lecture Unit</th>
-                                    <th>Laboratory Unit</th>
-                                    <th>Credit Unit</th>
+                                    <th>Enrollment Detail</th>
+                                    <th>Fee name</th>
+                                    <th>Fee amount</th>
+                                    <th>is paid</th>
                                     <th>Action</th>
                                   </tr>
                               </thead>
                               <tbody>
-                                {% include "administrator/subject/list_subject.html" %}
+                                {% include "administrator/assessment/list_assessment.html" %}
                               </tbody>
                           </table>
                         </div>
@@ -51,7 +50,7 @@
             </div>
         </div>
     </section>
-    <div class="modal fade" id="new-subject">
+    <div class="modal fade" id="new-assessment">
         <div class="modal-dialog">
           <div class="modal-content">
           </div>
@@ -97,10 +96,10 @@
             dataType: 'json',
             beforeSend: function()
             {
-                $("#new-subject").modal("show");
+                $("#new-assessment").modal("show");
             },
             success: function (data) {
-                $("#new-subject .modal-content").html(data.html_form);
+                $("#new-assessment .modal-content").html(data.html_form);
             }
           });
         };
@@ -118,35 +117,35 @@
             {
               if (data.form_is_valid) 
               {
-                $("#subject-list tbody").html(data.subject_list);
-                $("#new-subject").modal("hide");
+                $("#assessment-list tbody").html(data.assessment_list);
+                $("#new-assessment").modal("hide");
               }
               else 
               {
-                $("#new-subject .modal-content").html(data.html_form);
+                $("#new-assessment .modal-content").html(data.html_form);
               }
             }
           });
         return false;
         }
 
-  //add subject
-  $(".js-add-subject").click(loadform);
-  $("#new-subject").on("submit",".js-subject-create-form", saveForm);
-  //edit subject
-  $("#subject-list").on("click", ".js-edit-subject", loadform);
-  $("#new-subject").on("submit", ".js-subject-edit-form", saveForm);
-  //delete subject
-  $("#subject-list").on("click", ".js-delete-subject", loadform);
-  $("#new-subject").on("submit", ".js-subject-delete-form", saveForm);
+  //add assessment
+  $(".js-add-assessment").click(loadform);
+  $("#new-assessment").on("submit",".js-assessment-create-form", saveForm);
+  //edit assessment
+  $("#assessment-list").on("click", ".js-edit-assessment", loadform);
+  $("#new-assessment").on("submit", ".js-assessment-edit-form", saveForm);
+  //delete assessment
+  $("#assessment-list").on("click", ".js-delete-assessment", loadform);
+  $("#new-assessment").on("submit", ".js-assessment-delete-form", saveForm);
 
 
   $(function () {
-    $("#subject-list").DataTable({
+    $("#assessment-list").DataTable({
       "responsive": true, "lengthChange": true, "autoWidth": false,
       "buttons": ["csv", "excel", "pdf", "print"]
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#subject-list_wrapper .col-md-6:eq(0)');
+    }).buttons().container().appendTo('#assessment-list_wrapper .col-md-6:eq(0)');
     // $('#course_prospectus-list').DataTable({
     //  "paging": true,
     //  "lengthChange": false,
