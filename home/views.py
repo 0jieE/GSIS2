@@ -9,6 +9,8 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout, authenticate,login
 from .models import College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus
 
+from .forms01 import EnrollForm
+
 
 from django.contrib.auth.decorators import login_required
 
@@ -831,3 +833,27 @@ def save_course_prospectus(request, form, template_name):
     context = {'form':form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
+
+
+
+
+# enrollment
+def enroll(request):
+    if request.method == 'POST':
+        form = EnrollForm(request.POST)
+        if form.is_valid():
+            semester = form.cleaned_data['enrollment']
+            year_level = form.cleaned_data['year_level']
+            selected_schedules = form.cleaned_data['schedules']
+
+            for schedule in selected_schedules:
+                subject = schedule.subject
+                SubjectTaken.objects.create(semester=semester, subject=subject)
+
+            return redirect('enrollment_done')
+    else:
+        form = EnrollForm()
+    return render(request, 'administrator/enrollments/enroll.html', {'form': form})
+
+def enrollment_done(request):
+    return render(request, 'done.html')

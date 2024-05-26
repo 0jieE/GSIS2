@@ -1,0 +1,74 @@
+<!-- templates/enroll.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enroll</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .left, .right {
+            width: 50%;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enroll</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="container">
+            <div class="left">
+                <h2>Semester Details</h2>
+                {{ form.semester }}
+                <h2>Year Level</h2>
+                {{ form.year_level }}
+            </div>
+            <div class="right">
+                <h2>Select Schedules</h2>
+                {% if form.schedules.queryset.exists %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Subject</th>
+                            <th>Days</th>
+                            <th>Time</th>
+                            <th>Room</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in form.schedules %}
+                        <tr>
+                            <td>{{ schedule }}</td>
+                            <td>{{ schedule.subject }}</td>
+                            <td>{{ schedule.days }}</td>
+                            <td>{{ schedule.time }}</td>
+                            <td>{{ schedule.room }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No schedules available for the selected semester and year level.</p>
+                {% endif %}
+            </div>
+        </div>
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
