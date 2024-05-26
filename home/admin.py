@@ -8,10 +8,10 @@ class UserAdminConfig(UserAdmin):
     list_filter = ('username', 'first_name', 'administrator','staff','student',)
     ordering = ('username',)
     list_display = ('username', 'first_name','middle_name','last_name',
-                    'is_superuser','is_active', 'is_staff','administrator','staff','student')
+                    'is_superuser','is_active', 'is_staff','administrator','staff','faculty','student')
     fieldsets = (
         (None, {'fields': ('id_no','email', 'username', 'first_name','middle_name','last_name',)}),
-        ('Permissions', {'fields': ('is_superuser','is_staff', 'is_active','administrator','staff','student')}),
+        ('Permissions', {'fields': ('is_superuser','is_staff', 'is_active','administrator','staff','faculty','student')}),
     )
     add_fieldsets = (
         (None, {

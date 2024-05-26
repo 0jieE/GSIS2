@@ -78,4 +78,43 @@ urlpatterns = [
      path("administrator/course_prospectus/add",views.add_course_prospectus, name='add-course_prospectus-admin'),
      path('administrator/course_prospectus/<int:pk>/edit/', views.edit_course_prospectus, name='edit-course_prospectus-admin'),
      path('administrator/course_prospectus/<int:pk>/delete/', views.delete_course_prospectus, name='delete-course_prospectus-admin'),
+
+     #Scholarship
+     path("administrator/scholarship/list",views.scholarship, name='scholarship-admin'),
+     path("administrator/scholarship/add",views.add_scholarship, name='add-scholarship-admin'),
+     path('administrator/scholarship/<int:pk>/edit/', views.edit_scholarship, name='edit-scholarship-admin'),
+     path('administrator/scholarship/<int:pk>/delete/', views.delete_scholarship, name='delete-scholarship-admin'),
+
+     #Fees
+     path("administrator/fees/list",views.fees, name='fees-admin'),
+     path("administrator/fees/add",views.add_fees, name='add-fees-admin'),
+     path('administrator/fees/<int:pk>/edit/', views.edit_fees, name='edit-fees-admin'),
+     path('administrator/fees/<int:pk>/delete/', views.delete_fees, name='delete-fees-admin'),
+
+     #Enrollment Detail
+     path("administrator/enrollment_detail/list",views.enrollment_detail, name='enrollment_detail-admin'),
+     path("administrator/enrollment_detail/add",views.add_enrollment_detail, name='add-enrollment_detail-admin'),
+     path('administrator/enrollment_detail/<int:pk>/edit/', views.edit_enrollment_detail, name='edit-enrollment_detail-admin'),
+     path('administrator/enrollment_detail/<int:pk>/delete/', views.delete_enrollment_detail, name='delete-enrollment_detail-admin'),
+
+     #Subject Taken
+     path("administrator/subject_taken/list",views.subject_taken, name='subject_taken-admin'),
+     path("administrator/subject_taken/add",views.add_subject_taken, name='add-subject_taken-admin'),
+     path('administrator/subject_taken/<int:pk>/edit/', views.edit_subject_taken, name='edit-subject_taken-admin'),
+     path('administrator/subject_taken/<int:pk>/delete/', views.delete_subject_taken, name='delete-subject_taken-admin'),
+
+     #Assessment
+     path("administrator/assessment/list",views.assessment, name='assessment-admin'),
+     path("administrator/assessment/add",views.add_assessment, name='add-assessment-admin'),
+     path('administrator/assessment/<int:pk>/edit/', views.edit_assessment, name='edit-assessment-admin'),
+     path('administrator/assessment/<int:pk>/delete/', views.delete_assessment, name='delete-assessment-admin'),
+
+     #Payment
+     path("administrator/payment/list",views.payment, name='payment-admin'),
+     path("administrator/payment/add",views.add_payment, name='add-payment-admin'),
+     path('administrator/payment/<int:pk>/edit/', views.edit_payment, name='edit-payment-admin'),
+     path('administrator/payment/<int:pk>/delete/', views.delete_payment, name='delete-payment-admin'),
+
+     #Student Profile
+     path("administrator/student_profile/list",views.student_profile, name='student_profile-admin'),
 ]

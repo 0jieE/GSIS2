@@ -1,0 +1,168 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} STUDENT PROFILE {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Student Profile</h1>
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+        
+                          {% comment %} <button type="button" class="btn btn-sm btn-primary float-right  js-add-payment" data-toggle="modal" data-target="#new-payment" data-url="{% url "add-payment-admin" %}">Add new</button> {% endcomment %}
+                        </div>
+                        <div class="card-body p-10">
+                          <table id="payment-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>ID No.</th>
+                                    <th>Name</th>
+                                    <th>Program</th>
+                                    <th>Year Level</t>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                    <td>24-1234</td>
+                                    <td>Arnold Smith</td>
+                                    <td>MIS</td>
+                                    <td>2n Year</td>
+                                  </tr>
+                                {% comment %} {% include "administrator/payment/list_payment.html" %} {% endcomment %}
+                              </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% comment %} <div class="modal fade" id="new-payment">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div> {% endcomment %}
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+  $(function() 
+  {
+      var loadform = function() 
+        {
+          var btn = $(this);
+          console.log(btn.attr("data-url"));
+          $.ajax
+          ({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function()
+            {
+                $("#new-payment").modal("show");
+            },
+            success: function (data) {
+                $("#new-payment .modal-content").html(data.html_form);
+            }
+          });
+        };
+
+      var saveForm = function() 
+        {
+          var form = $(this);
+          $.ajax
+          ({
+            url: form.attr("action"),
+            data: form.serialize(),
+            type: form.attr("method"),
+            dataType: 'json',
+            success: function (data) 
+            {
+              if (data.form_is_valid) 
+              {
+                $("#payment-list tbody").html(data.fees_list);
+                $("#new-payment").modal("hide");
+              }
+              else 
+              {
+                $("#new-payment .modal-content").html(data.html_form);
+              }
+            }
+          });
+        return false;
+        }
+
+  //add payment
+  $(".js-add-payment").click(loadform);
+  $("#new-payment").on("submit",".js-payment-create-form", saveForm);
+  //edit payment
+  $("#payment-list").on("click", ".js-edit-payment", loadform);
+  $("#new-payment").on("submit", ".js-payment-edit-form", saveForm);
+  //delete payment
+  $("#payment-list").on("click", ".js-delete-payment", loadform);
+  $("#new-payment").on("submit", ".js-payment-delete-form", saveForm);
+
+
+  $(function () {
+    $("#payment-list").DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#payment-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
+});
+
+ 
+</script>
+{% endblock extra_scripts %}

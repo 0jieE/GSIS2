@@ -1,0 +1,162 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Scholarships {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Scholarships</h1>
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+        
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-scholarship" data-toggle="modal" data-target="#new-scholarship" data-url="{% url "add-scholarship-admin" %}">Add new</button>
+                        </div>
+                        <div class="card-body p-10">
+                          <table id="scholarship-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Scholarship Name</th>
+                                    <th>Scholarship Description</th>
+                                    <th>Scholarship Type</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% include "administrator/scholarship/list_scholarship.html" %}
+                              </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-scholarship">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+  $(function() 
+  {
+      var loadform = function() 
+        {
+          var btn = $(this);
+          console.log(btn.attr("data-url"));
+          $.ajax
+          ({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function()
+            {
+                $("#new-scholarship").modal("show");
+            },
+            success: function (data) {
+                $("#new-scholarship .modal-content").html(data.html_form);
+            }
+          });
+        };
+
+      var saveForm = function() 
+        {
+          var form = $(this);
+          $.ajax
+          ({
+            url: form.attr("action"),
+            data: form.serialize(),
+            type: form.attr("method"),
+            dataType: 'json',
+            success: function (data) 
+            {
+              if (data.form_is_valid) 
+              {
+                $("#scholarship-list tbody").html(data.scholarship_list);
+                $("#new-scholarship").modal("hide");
+              }
+              else 
+              {
+                $("#new-scholarship .modal-content").html(data.html_form);
+              }
+            }
+          });
+        return false;
+        }
+
+  //add scholarship
+  $(".js-add-scholarship").click(loadform);
+  $("#new-scholarship").on("submit",".js-scholarship-create-form", saveForm);
+  //edit scholarship
+  $("#scholarship-list").on("click", ".js-edit-scholarship", loadform);
+  $("#new-scholarship").on("submit", ".js-scholarship-edit-form", saveForm);
+  //delete scholarship
+  $("#scholarship-list").on("click", ".js-delete-scholarship", loadform);
+  $("#new-scholarship").on("submit", ".js-scholarship-delete-form", saveForm);
+
+
+  $(function () {
+    $("#scholarship-list").DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#scholarship-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
+});
+
+ 
+</script>
+{% endblock extra_scripts %}
