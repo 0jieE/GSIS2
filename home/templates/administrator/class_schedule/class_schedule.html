@@ -16,6 +16,10 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>Class Schedule</h1>
+            <ol class="breadcrumb float-sm-left">
+              <li class="breadcrumb-item active">All Enrollment</li>
+              <li class="breadcrumb-item "><a href="{% url "enrollment_class_schedule-admin" %}">Select Enrollment </a></li>
+            </ol>
           </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -26,7 +30,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-        
+                          All enrollment classs schedule
                           <button type="button" class="btn btn-sm btn-primary float-right  js-add-class_schedule" data-toggle="modal" data-target="#new-class_schedule" data-url="{% url "add-class_schedule-admin" %}">Add new</button>
                         </div>
                         <div class="card-body p-10">
@@ -34,6 +38,7 @@
                               <thead>
                                   <tr>
                                     <th>Enrollment</th>
+                                    <th>Course</th>
                                     <th>Subject</th>
                                     <th>Faculty</th>
                                     <th>Room</th>

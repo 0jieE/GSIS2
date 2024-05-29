@@ -1,13 +1,10 @@
 {%for s in subject_taken %}
     <tr>
         <td>{{s.schedule_id}}</td>
-        <td>{{s.enrollment_id}}</td>
+        <td>{{s.enrollment_detail_id}}</td>
         <td>{{s.is_pre_enroll}}</td>
         <td>{{s.is_registered}}</td>
         <td>{{s.is_dropped}}</td>
-        <td>{{s.midterm_grade}}</td>
-        <td>{{s.final_grade}}</td>
-        <td>{{s.final_re_grade}}</td>
         <td>
             <button class="btn btn-primary btn-sm js-edit-subject_taken" data-url="{% url "edit-subject_taken-admin" s.pk%}">
                 Edit

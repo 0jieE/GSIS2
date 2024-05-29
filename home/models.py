@@ -299,15 +299,26 @@ class Subject(models.Model):
         # return f'{self.code} - {self.descriptive_title}'
 
 class Class_Schedule(models.Model):
+    FIRST_YEAR = '1st Year'
+    SECOND_YEAR = '2nd Year'
+    THIRD_YEAR = '3rd Year'
+    FOURTH_YEAR = '4th Year'
+    FIFTH_YEAR = '5th Year'
+    YEAR_LEVEL = ((FIRST_YEAR,'1st Year'),
+                  (SECOND_YEAR,'2nd Year'),
+                  (THIRD_YEAR,'3rd Year'),
+                  (FOURTH_YEAR,'4th Year'),
+                  (FIFTH_YEAR,'5th Year'),)
     enrollment = models.ForeignKey(Enrollment, related_name = 'enrollment_class_schedule', on_delete = models.CASCADE)
+    course = models.ForeignKey(Course, related_name='course_class_schedule', on_delete = models.CASCADE)
     subject = models.ForeignKey(Subject, related_name = 'subject_class_schedule', on_delete = models.CASCADE)
     room = models.ForeignKey(Room, related_name = 'room_class_schedule', on_delete = models.CASCADE)
-    year_level = models.CharField(max_length=50)
+    year_level = models.CharField(max_length=20, choices=YEAR_LEVEL, default=FIRST_YEAR)
     schedule = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty,related_name='faculty_class_schedule',on_delete = models.CASCADE)
 
     def __str__(self):
-        template = '{0.subject}'
+        template = '{0.subject} {0.schedule}'
         return template.format(self)
 
 class Prospectus(models.Model):
@@ -357,6 +368,11 @@ class Scholarship(models.Model):
     scholarship_description = models.CharField(max_length=250)
     scholarship_type = models.CharField(max_length=20, choices=TYPE, default=None)
 
+    def __str__(self):
+        template = '{0.scholarship_name}'
+        return template.format(self)
+
+
 class Fees(models.Model):
     fee_name = models.CharField(max_length=100, unique=True)
     fee_amount = models.DecimalField(decimal_places = 2, max_digits = 5)
@@ -370,12 +386,12 @@ class EnrollmentDetail(models.Model):
         (OLD, 'Old Continuing'), (NEW, 'New'), (OS, 'OS')
     )
 
-    FIRST = '1'
-    SECOND = '2'
-    THIRD = '3'
-    FOURTH = '4'
+    FIRST = '1st Year'
+    SECOND = '2nd Year'
+    THIRD = '3rd Year'
+    FOURTH = '4rth Year'
     YEAR = (
-        (FIRST, '1'), (SECOND, '2'), (THIRD, '3'), (FOURTH, '4')
+        (FIRST, '1st Year'), (SECOND, '2nd Year'), (THIRD, '3rd Year'), (FOURTH, '4th Year')
     )
 
     ENR = 'Enrolled'
@@ -385,21 +401,56 @@ class EnrollmentDetail(models.Model):
     STATUS = (
         (ENR, 'Enrolled'), (PRE, 'Pre-Enrolled'), (DRP, 'Dropped'), (PEN, 'Pending')
     )
+    student = models.ForeignKey(Student_user, related_name='student_enrollment_detail', on_delete=models.CASCADE,blank=True,null=True)
     student_type = models.CharField(max_length=20, choices=TYPE, default=NEW)
     student_year = models.CharField(max_length=10, choices=YEAR, default=FIRST)
     course_id = models.ForeignKey(Course, related_name='enrollment_detail_course', on_delete=models.DO_NOTHING)
-    scholarship_id = models.ForeignKey(Scholarship, related_name='enrollment_detail_scholarship', on_delete=models.DO_NOTHING)
+    scholarship_id = models.ForeignKey(Scholarship, related_name='enrollment_detail_scholarship', on_delete=models.DO_NOTHING,blank=True,null=True)
     enrollment_status = models.CharField(max_length=20, choices=STATUS, default=PEN)
+
+    def __str__(self):
+        template = '{0.student}'
+        return template.format(self)
     
 class SubjectTaken(models.Model):
+    NOT = 'not yet graded'
+    INC = 'INC'
+    NG = 'NG'
+    IN_PROGRESS = 'in_progress'
+    FAILED = '5'
+    THREE = '3'
+    TWO_75 = '2.75'
+    TWO_5 = '2.5'
+    TWO_25 = '2.23'
+    TWO = '2.0'
+    ONE_75 = '1.75'
+    ONE_5 = '1.5'
+    ONE_25 = '1.25'
+    ONE = '1.0'
+    GRADE =(
+            (NOT , 'not yet graded'),
+            (INC , 'INC'),
+            (NG , 'NG',),
+            (IN_PROGRESS , 'in_progress'),
+            (FAILED , '5'),
+            (THREE , '3'),
+            (TWO_75 , '2.75'),
+            (TWO_5 , '2.5'),
+            (TWO_25 , '2.23'),
+            (TWO , '2.0'),
+            (ONE_75 , '1.75'),
+            (ONE_5 , '1.5'),
+            (ONE_25 , '1.25'),
+            (ONE , '1.0')
+            )
     schedule_id = models.ForeignKey(Class_Schedule, related_name='subject_taken_schedule', on_delete=DO_NOTHING)
     enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail', on_delete=models.CASCADE)
     is_pre_enroll = models.BooleanField(default=False)
     is_registered = models.BooleanField(default=False)
     is_dropped = models.BooleanField(default=False)
-    midterm_grade = models.CharField(max_length=20)
-    final_grade = models.CharField(max_length=20)
-    final_re_grade = models.CharField(max_length=20)
+    midterm_grade = models.CharField(max_length=20,choices=GRADE,default=NOT)
+    final_grade = models.CharField(max_length=20,choices=GRADE, default=NOT)
+    final_re_grade = models.CharField(max_length=20,choices=GRADE, default=NOT)
 
 class Assessment(models.Model):
     enrollment_detail_id = models.ForeignKey(EnrollmentDetail, related_name='enrollment_detail_assessment', on_delete=models.CASCADE)

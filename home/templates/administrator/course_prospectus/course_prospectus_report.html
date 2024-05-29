@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+    <style>
+        h1{
+            text-align:center;
+        }
+        h3{
+            text-align:left;
+        }
+        #table1 {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+    
+        }
+        th{
+            padding: 3px;
+            text-align:center;
+            
+        }
+        td{
+            text-align:center;
+
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    {% comment %} <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% endcomment %}
+    <h1>{{course.course_name}}</h1>
+</head>
+<body>
+<div class="content-wrapper">
+    <section>
+        <div class="container-fluid">
+            {% for year_level in sorted_year_levels %} 
+                <br></br>
+                <h1 class="card-title">{{ year_level }}</h1>
+                    {% for semester in semesters %}
+                        {% if semester == '1st'%}
+                            <h3>{{semester}} Semester</h3>
+                        {% elif semester == "2nd"  %}
+                            <h3>{{semester}} Semester</h3>
+                        {% else %}
+                            <h3>{{semester}}</h3>
+                        {% endif %}
+                        <table id="table1">
+                            <thead>
+                                <tr>
+                                    <th>Subject Description</th>
+                                    <th>Pre-Requisit</th>
+                                    <th>Credit Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody>  
+                            {% for c in course_prospectus  %}
+                                {% if course.id == c.course_id and c.year_level == year_level and c.semester == semester%}
+                                    <tr>
+                                        <td >{{c.subject}}</td>
+                                        <td>{{c.pre_requisit1.code}}, 
+                                            {{c.pre_requisit2.code}}, 
+                                            {{c.pre_requisit3.code}}, 
+                                        </td>
+                                        {% for subject in subjects  %}
+                                            {% if subject.id == c.subject.id %}
+                                                <td>{{subject.credit_unit}}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                                {% comment %} <tr>
+                                    <td ></td>
+                                    <td></td>
+                                    <td style="tex-align:right">Total</td>
+                                </tr> {% endcomment %}
+                            </tbody>
+                        </table>
+                        <br></br>
+                    {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+</div>
+</body>
+</html lang="en">

@@ -10,6 +10,9 @@
     </div>
     <div class="modal-body">
         <div class="col-md-12">
+            {{form.student|as_crispy_field}}
+        </div>
+        <div class="col-md-12">
             {{form.student_type|as_crispy_field}}
         </div>
         <div class="col-md-12">

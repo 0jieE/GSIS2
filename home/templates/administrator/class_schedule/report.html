@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+    <style>
+        h1{
+            text-align:center;
+        }
+        h3{
+            text-align:left;
+        }
+        #table1 {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+    
+        }
+        th{
+            padding: 3px;
+            text-align:center;
+            
+        }
+        td{
+            text-align:center;
+
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    {% comment %} <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% endcomment %}
+    <h1>CLASS SCHEDULES</h1>
+    <h1>{{enrollment}}</h1>
+</head>
+<br></br>
+<body>
+    {% for course in courses %}
+        <h2>{{course}}</h2>
+        {% for year_level in year_levels  %}
+            <h2>{{year_level}}</h2>
+            <table id="table1">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Faculty</th>
+                        <th>Room</th>
+                        <th>Schedule</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in class_schedule  %}
+                        {% if c.course.id == course.id and year_level == c.year_level %}
+                            <tr>
+                                <td>{{c.subject}}</td>
+                                <td>{{c.faculty}}</td>
+                                <td>{{c.room}}</td>
+                                <td>{{c.schedule}}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br></br>
+        {% endfor %}
+    {% endfor %}
+</body>
+</html lang="en">

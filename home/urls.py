@@ -63,7 +63,9 @@ urlpatterns = [
 
      #class schedule
      path("administrator/class_schedule/list",views.class_schedule, name='class_schedule-admin'),
+     path("administrator/class_schedule/enrollment",views.enrollment_class_schedule, name='enrollment_class_schedule-admin'),
      path("administrator/class_schedule/add",views.add_class_schedule, name='add-class_schedule-admin'),
+     path('administrator/class_schedule/enrollment/<int:pk>/', views.erollment_class_schedule_report, name='enrollment_class_schedule-admin'),
      path('administrator/class_schedule/<int:pk>/edit/', views.edit_class_schedule, name='edit-class_schedule-admin'),
      path('administrator/class_schedule/<int:pk>/delete/', views.delete_class_schedule, name='delete-class_schedule-admin'),
 
@@ -75,9 +77,11 @@ urlpatterns = [
 
      #course_prospectus
      path("administrator/course_prospectus/list",views.course_prospectus, name='course_prospectus-admin'),
+     path("administrator/course_prospectu/prospectus_list",views.prospectus_list, name='prospectus_list-admin'),
      path("administrator/course_prospectus/add",views.add_course_prospectus, name='add-course_prospectus-admin'),
      path('administrator/course_prospectus/<int:pk>/edit/', views.edit_course_prospectus, name='edit-course_prospectus-admin'),
      path('administrator/course_prospectus/<int:pk>/delete/', views.delete_course_prospectus, name='delete-course_prospectus-admin'),
+     path('administrator/course_prospectus/report/<int:pk>/', views.course_prospectus_report, name='course_prospectus_report-admin'),
 
      #Scholarship
      path("administrator/scholarship/list",views.scholarship, name='scholarship-admin'),
@@ -99,9 +103,11 @@ urlpatterns = [
 
      #Subject Taken
      path("administrator/subject_taken/list",views.subject_taken, name='subject_taken-admin'),
+     path("administrator/subject_taken/grades",views.student_subject_taken_grade, name='subject_taken_grade-admin'),
      path("administrator/subject_taken/add",views.add_subject_taken, name='add-subject_taken-admin'),
      path('administrator/subject_taken/<int:pk>/edit/', views.edit_subject_taken, name='edit-subject_taken-admin'),
      path('administrator/subject_taken/<int:pk>/delete/', views.delete_subject_taken, name='delete-subject_taken-admin'),
+     path('administrator/student_grade_report/<int:pk1>/<int:pk2>/', views.student_grade_report, name='student_grade_report-admin'),
 
      #Assessment
      path("administrator/assessment/list",views.assessment, name='assessment-admin'),
@@ -117,4 +123,5 @@ urlpatterns = [
 
      #Student Profile
      path("administrator/student_profile/list",views.student_profile, name='student_profile-admin'),
+     
 ]

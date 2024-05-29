@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+    <style>
+        h1{
+            text-align:left;
+        }
+        h3{
+            text-align:left;
+        }
+        #table1 {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+    
+        }
+        th{
+            padding: 3px;
+            text-align:center;
+            
+        }
+        td{
+            text-align:center;
+
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    {% comment %} <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% endcomment %}
+    <h1>Name: {{enDetail}}</h1>
+    <h1>Program: {{course}}</h1>
+    <h1>Year Level :{{enDetail.student_year}}</h1>
+</head>
+<body>
+<div class="content-wrapper">
+    <section>
+        <div class="container-fluid">
+            {% for year_level in sorted_year_levels %} 
+                <br></br>
+                <h1 class="card-title">{{ year_level }}</h1>
+                    {% for semester in semesters %}
+                        {% if semester == '1st'%}
+                            <h3>{{semester}} Semester</h3>
+                        {% elif semester == "2nd"  %}
+                            <h3>{{semester}} Semester</h3>
+                        {% else %}
+                            <h3>{{semester}}</h3>
+                        {% endif %}
+                        <table id="table1">
+                            <thead>
+                                <tr>
+                                    <th>Subject Code/Description</th>
+                                    <th>Midter Grade</th>
+                                    <th>Final Grade</th>
+                                    <th>Final Re-grade</th>
+                                    <th>Credit Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody>  
+                            {% for c in course_prospectus  %}
+                                {% if course.id == c.course_id and c.year_level == year_level and c.semester == semester%}
+                                    <tr>
+                                        <td >{{c.subject}}</td>
+                                        {% for st in subject_taken %}
+                                        {% if enDetail.id == st.enrollment_detail_id.id %}
+                                            {% for cs in class_schedule  %}
+                                                {% if cs.id == st.schedule_id.id and cs.subject.id == c.subject.id%}
+                                                    <td>{{st.midterm_grade}}</td>
+                                                    <td>{{st.final_grade}}</td>
+                                                    <td>{{st.final_re_grade}}</td>  
+                                                    {% for subject in subjects  %}
+                                                        {% if subject.id == c.subject.id%}
+                                                            {% if not st.final_re_grade == 'not yet graded' and not st.final_re_grade == 'INC' and not st.final_re_grade == 'NG' and not st.final_re_grade == 'in_progress' and not st.final_re_grade == '5' %}
+                                                            <td>{{subject.credit_unit}}</td> 
+                                                            {% else %}        
+                                                            <td>0</td>              
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                                {% comment %} <tr>
+                                    <td ></td>
+                                    <td></td>
+                                    <td style="tex-align:right">Total</td>
+                                </tr> {% endcomment %}
+                            </tbody>
+                        </table>
+                        <br></br>
+                        
+                    {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+</div>
+</body>
+</html lang="en">

@@ -16,7 +16,14 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>Subject Taken</h1>
+            <div>
+              <ol class="breadcrumb float-sm-left">
+                <li class="breadcrumb-item active">Schedules</li>
+                <li class="breadcrumb-item "><a href="{% url "subject_taken_grade-admin" %}">Grades</a></li>
+              </ol>
+            </div>
           </div>
+        </div>
       </div><!-- /.container-fluid -->
     </section>
 
@@ -26,21 +33,18 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-        
+                          <a>Schedules</a>
                           <button type="button" class="btn btn-sm btn-primary float-right  js-add-subject_taken" data-toggle="modal" data-target="#new-subject_taken" data-url="{% url "add-subject_taken-admin" %}">Add new</button>
                         </div>
                         <div class="card-body p-10">
                           <table id="subject_taken-list" class="table table-bordered table-hover table-sm">
                               <thead>
                                   <tr>
-                                    <th>Schedule</th>
-                                    <th>Ennrollment Detail</th>
-                                    <th>is pre-enroll</th>
-                                    <th>is registered</th>
-                                    <th>is dropped</th>
-                                    <th>Midterm grade</th>
-                                    <th>Final Grade</th>
-                                    <th>Final re-grade</th>
+                                    <th>Subject schedule</th>
+                                    <th>Student</th>
+                                    <th>Enrolled</th>
+                                    <th>Registered</th>
+                                    <th>Dropped</th>
                                     <th>Action</th>
                                   </tr>
                               </thead>

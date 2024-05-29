@@ -352,12 +352,13 @@ class SubjectForm(forms.ModelForm):
 class ClassScheduleForm(forms.ModelForm):
     class Meta:
         model = Class_Schedule
-        fields = ['enrollment','subject','room','year_level','schedule','faculty']
+        fields = ['enrollment','course','subject','room','year_level','schedule','faculty']
         widgets = {
             'enrollment' : forms.Select(attrs={'class':'form-control'}),
+            'course' : forms.Select(attrs={'class':'form-control'}),
             'subject' : forms.Select(attrs={'class':'form-control'}),
             'room' : forms.Select(attrs={'class':'form-control'}),
-            'year_level' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Year level'}),
+            'year_level' : forms.Select(attrs={'class':'form-control'}),
             'schedule' : forms.TextInput(attrs={'class':'form-control','placeholder':'Schedule (ie. TTH - 1:00PM-3:00PM, MWF - 7:00AM - 9:00AM'}),
             'faculty' : forms.Select(attrs={'class':'form-control',}),
         }
@@ -399,8 +400,9 @@ class FeesForm(forms.ModelForm):
 class EnrollmentDetailForm(forms.ModelForm):
     class Meta:
         model = EnrollmentDetail
-        fields = ['student_type', 'student_year', 'course_id', 'scholarship_id', 'enrollment_status']
+        fields = ['student','student_type', 'student_year', 'course_id', 'scholarship_id', 'enrollment_status']
         widgets = {
+            'student' : forms.Select(attrs={'class':'form-control'}),
             'student_type' : forms.Select(attrs={'class':'form-control'}),
             'student_year' : forms.Select(attrs={'class':'form-control'}),
             'course_id' : forms.Select(attrs={'class':'form-control'}),
@@ -411,7 +413,7 @@ class EnrollmentDetailForm(forms.ModelForm):
 class SubjectTakenForm(forms.ModelForm):
     class Meta:
         model = SubjectTaken
-        fields = ['schedule_id', 'enrollment_detail_id', 'is_dropped', 'midterm_grade', 'final_grade', 'final_re_grade']
+        fields = ['schedule_id', 'enrollment_detail_id','is_pre_enroll','is_registered', 'is_dropped', 'midterm_grade', 'final_grade', 'final_re_grade']
 
 class AssessmentForm(forms.ModelForm):
     class Meta:

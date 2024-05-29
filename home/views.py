@@ -1,20 +1,28 @@
-
+import re
+from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse, JsonResponse
+from xhtml2pdf import pisa
 from .forms import LoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm,AdministratorRegistrationForm, StaffRegistrationForm, StudentRegistrationForm, RegistrationForm, DepartmentForm, CourseForm, CollegeForm, EnrollmentForm, RoomForm, SubjectForm, ClassScheduleForm, PropectuseForm, CoursePropectuseform, StudentProfileForm, StaffProfileForm, AdministratorProfileForm,StudentAccountEditForm, StaffAccountEditForm,AadministratorAccountEditForm, FacultyRegistrationForm, FeesForm, ScholarshipForm, EnrollmentDetailForm, SubjectTakenForm, AssessmentForm, PaymentForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetConfirmView, PasswordResetView
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout, authenticate,login
 from .models import College, Department, Course, Enrollment, Room, Subject, Class_Schedule, Prospectus, Course_Prospectus, SubjectTaken, Fees, Scholarship, EnrollmentDetail, SubjectTaken, Assessment, Payment
-
-from .forms01 import EnrollForm
-
-
 from django.contrib.auth.decorators import login_required
 
 from .models import *
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
 
 def index(request):
   if not request.user.is_authenticated:
@@ -659,6 +667,48 @@ def class_schedule(request):
     }
         return render(request, 'administrator/class_schedule/class_schedule.html',context)
 
+
+def enrollment_class_schedule(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        enrollment = Enrollment.objects.all()
+        context = {
+          'parent': 'enrollment',
+          'segment': 'class_schedule',
+          'enrollment':enrollment,
+    }
+        return render(request, 'administrator/class_schedule/enrollment_class_schedule.html',context)
+    
+
+def erollment_class_schedule_report(request,pk):
+    enrollment = Enrollment.objects.get(id=pk)
+    courses = Course.objects.all()
+    class_schedule = Class_Schedule.objects.all()
+    year_levels = ['1st Year', '2nd Year', '3rd Year', '4th Year', ' 5th Year']
+
+    context = {'class_schedule':class_schedule,
+               'enrollment':enrollment,
+               'courses':courses,
+               'year_levels':year_levels,
+              }
+
+    # Load template
+    # template = get_template('administrator/course_prospectus/course_prospectus_report.html')
+    # html = template.render(context)
+    html = get_template('administrator/class_schedule/report.html').render(context)
+
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+    # Generate PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
 def add_class_schedule(request):
         if(request.method == 'POST'):
                 form = ClassScheduleForm(request.POST)
@@ -704,6 +754,7 @@ def save_class_schedule(request, form, template_name):
     context = {'form':form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
+
 
 #________________________________________________________________________________________________________
 
@@ -784,12 +835,26 @@ def course_prospectus(request):
         return redirect("login")
     else:
         course_prospectus = Course_Prospectus.objects.all()
+        course = Course.objects.all()
         context = {
               'parent':'prospectus_',
               'segment':'course_p',
+              'course':course,
               'course_prospectus':course_prospectus,        
         }
         return render(request, 'administrator/course_prospectus/course_prospectus.html',context)
+    
+def prospectus_list(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        course = Course.objects.all()
+        context = {
+              'parent':'prospectus_',
+              'segment':'course_p',
+              'course':course,       
+        }
+        return render(request, 'administrator/course_prospectus/prospectus_list.html',context)
 
 def add_course_prospectus(request):
         if(request.method == 'POST'):
@@ -838,7 +903,48 @@ def save_course_prospectus(request, form, template_name):
     return JsonResponse(data)
 
 
-<<<<<<< HEAD
+def course_prospectus_report(request,pk):
+    course = Course.objects.get(id=pk)
+    subjects = Subject.objects.all()
+    course_prospectus = Course_Prospectus.objects.all()
+    semesters = ['1st', '2nd', 'Summer']
+    year_levels_results= []
+    year_levels = ['1st Year', '2nd Year', '3rd Year', '4th Year', ' 5th Year']
+    for course_year_levels in course_prospectus:
+         if course.id == course_year_levels.course.id:
+              for levels in year_levels:
+                    if levels == course_year_levels.year_level: 
+                        year_levels_results.append(levels)
+    unique_year_levels = list(set(year_levels_results))
+    def key_func(s):
+        match = re.match(r'(\d+)', s)
+        if match:
+            return int(match.group(1))
+        else:
+            return float('inf')
+    sorted_year_levels = sorted(unique_year_levels, key=key_func)
+    # Dummy data for example
+    context = {'course_prospectus':course_prospectus,
+               'course':course,
+               'semesters':semesters,
+               'sorted_year_levels': sorted_year_levels,
+               'subjects':subjects
+              }
+
+    # Load template
+    # template = get_template('administrator/course_prospectus/course_prospectus_report.html')
+    # html = template.render(context)
+    html = get_template('administrator/course_prospectus/course_prospectus_report.html').render(context)
+
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+    # Generate PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
 
 
 # enrollment
@@ -861,7 +967,7 @@ def enroll(request):
 
 def enrollment_done(request):
     return render(request, 'done.html')
-=======
+
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #            Scholarship
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1017,7 +1123,7 @@ def add_enrollment_detail(request):
 
 
 def edit_enrollment_detail(request,pk):
-        enrollment_detail = get_object_or_404(enrollment_detail, pk=pk)
+        enrollment_detail = get_object_or_404(EnrollmentDetail, pk=pk)
         if(request.method == 'POST'):
                 form = EnrollmentDetailForm(request.POST, instance=enrollment_detail)
         else:    
@@ -1026,7 +1132,7 @@ def edit_enrollment_detail(request,pk):
 
 
 def delete_enrollment_detail(request,pk):
-        enrollment_detail = get_object_or_404(enrollment_detail, pk=pk)
+        enrollment_detail = get_object_or_404(EnrollmentDetail, pk=pk)
         data = dict()
         if request.method == 'POST':
             enrollment_detail.delete()
@@ -1064,12 +1170,15 @@ def subject_taken(request):
         return redirect("login")
     else:
         subject_taken = SubjectTaken.objects.all()
+        students = EnrollmentDetail.objects.all()
         context = {
               'parent':'',
               'segment':'subject_taken',
-              'subject_taken':subject_taken,        
+              'subject_taken':subject_taken,   
+              'students':students,     
         }
         return render(request, 'administrator/subject_taken/subject_taken.html',context)
+
 
 def add_subject_taken(request):
         if(request.method == 'POST'):
@@ -1081,7 +1190,7 @@ def add_subject_taken(request):
 
 
 def edit_subject_taken(request,pk):
-        subject_taken = get_object_or_404(subject_taken, pk=pk)
+        subject_taken = get_object_or_404(SubjectTaken, pk=pk)
         if(request.method == 'POST'):
                 form = SubjectTakenForm(request.POST, instance=subject_taken)
         else:    
@@ -1090,7 +1199,7 @@ def edit_subject_taken(request,pk):
 
 
 def delete_subject_taken(request,pk):
-        subject_taken = get_object_or_404(subject_taken, pk=pk)
+        subject_taken = get_object_or_404(SubjectTaken, pk=pk)
         data = dict()
         if request.method == 'POST':
             subject_taken.delete()
@@ -1116,6 +1225,66 @@ def save_subject_taken(request, form, template_name):
     context = {'form':form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
+
+def student_subject_taken_grade(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        students = EnrollmentDetail.objects.all()
+        context = {
+              'parent':'',
+              'segment':'subject_taken',
+              'students':students,      
+        }
+        return render(request, 'administrator/subject_taken/student_subject_taken_grade.html',context)
+
+def student_grade_report(request,pk1,pk2):
+    enDetail = EnrollmentDetail.objects.get(id=pk1)
+    course = Course.objects.get(id=pk2)
+    subjects = Subject.objects.all()
+    class_schedule = Class_Schedule.objects.all()
+    subject_taken = SubjectTaken.objects.all()
+    course_prospectus = Course_Prospectus.objects.all()
+    semesters = ['1st', '2nd', 'Summer']
+    year_levels_results= []
+    year_levels = ['1st Year', '2nd Year', '3rd Year', '4th Year', ' 5th Year']
+    for course_year_levels in course_prospectus:
+         if course.id == course_year_levels.course.id:
+              for levels in year_levels:
+                    if levels == course_year_levels.year_level: 
+                        year_levels_results.append(levels)
+    unique_year_levels = list(set(year_levels_results))
+    def key_func(s):
+        match = re.match(r'(\d+)', s)
+        if match:
+            return int(match.group(1))
+        else:
+            return float('inf')
+    sorted_year_levels = sorted(unique_year_levels, key=key_func)
+    # Dummy data for example
+    context = {'course_prospectus':course_prospectus,
+               'enDetail':enDetail,
+               'course':course,
+               'semesters':semesters,
+               'sorted_year_levels': sorted_year_levels,
+               'subjects':subjects,
+               'subject_taken':subject_taken,
+               'class_schedule':class_schedule,
+              }
+    # Load template
+    # template = get_template('administrator/course_prospectus/course_prospectus_report.html')
+    # html = template.render(context)
+    html = get_template('administrator/subject_taken/student_grade_report.html').render(context)
+
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+    # Generate PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
 
 
 
@@ -1146,7 +1315,7 @@ def add_assessment(request):
 
 
 def edit_assessment(request,pk):
-        assessment = get_object_or_404(assessment, pk=pk)
+        assessment = get_object_or_404(Assessment, pk=pk)
         if(request.method == 'POST'):
                 form = AssessmentForm(request.POST, instance=assessment)
         else:    
@@ -1155,7 +1324,7 @@ def edit_assessment(request,pk):
 
 
 def delete_assessment(request,pk):
-        assessment = get_object_or_404(assessment, pk=pk)
+        assessment = get_object_or_404(Assessment, pk=pk)
         data = dict()
         if request.method == 'POST':
             assessment.delete()
@@ -1211,7 +1380,7 @@ def add_payment(request):
 
 
 def edit_payment(request,pk):
-        payment = get_object_or_404(payment, pk=pk)
+        payment = get_object_or_404(Payment, pk=pk)
         if(request.method == 'POST'):
                 form = PaymentForm(request.POST, instance=payment)
         else:    
@@ -1220,7 +1389,7 @@ def edit_payment(request,pk):
 
 
 def delete_payment(request,pk):
-        payment = get_object_or_404(payment, pk=pk)
+        payment = get_object_or_404(Payment, pk=pk)
         data = dict()
         if request.method == 'POST':
             payment.delete()
@@ -1263,26 +1432,7 @@ def student_profile(request):
               'student_profile':student_profile,        
         }
         return render(request, 'administrator/student_profile/student_profile.html',context)
-
-# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    #### 
-   #    #
-   #
-    ####   TUDENT VIEWS
-        #
-   #    #
-    ####
-# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
+    
 
 
 
@@ -1290,14 +1440,36 @@ def student_profile(request):
 
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ######       
-   #    #
-   #
-   #####  ACULTY VIEWS
-   #
-   #    
-   #
+    #####    #######  #     #   ######    ######  #     #   #######
+   #     #      #     #     #   #     #   #       ##    #      #
+   #            #     #     #   #     #   #       # #   #      #
+    #####       #     #     #   #     #   ######  #  #  #      #
+         #      #     #     #   #     #   #       #   # #      #
+   #     #      #     #     #   #     #   #       #    ##      #
+    #####       #      #####    ######    ######  #     #      #
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
->>>>>>> d021a2da87e14ece5fbaa1ddc96a12cecce53d2b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   #######      #       #####   #     #  #      #######   #      #
+   #     #     # #     #     #  #     #  #         #       #    #
+   #          #   #    #        #     #  #         #        #  #
+   #####     #######   #        #     #  #         #         ##
+   #         #     #   #        #     #  #         #         #
+   #         #     #   #     #  #     #  #         #        #
+   #         #     #    #####    #####   #######   #       #
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

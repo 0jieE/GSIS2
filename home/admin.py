@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Administrator_user, Staff_user, Student_user
+from .models import User, Administrator_user, Staff_user, Student_user, EnrollmentDetail
 
 class UserAdminConfig(UserAdmin):
     model = User
@@ -35,3 +35,5 @@ class Administrator_user_config(UserAdmin):
 admin.site.register(User,UserAdminConfig)
 
 admin.site.register(Administrator_user, Administrator_user_config)
+
+admin.site.register(EnrollmentDetail)

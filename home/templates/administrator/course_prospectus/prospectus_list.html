@@ -1,0 +1,111 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Course Prospectus {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Courses</h1>
+            <ol class="breadcrumb float-sm-left">
+            <li class="breadcrumb-item"><a href="{% url "course_prospectus-admin" %}">All Courses</a></li>
+            <li class="breadcrumb-item active">Course PDF</li>
+            </ol>
+        </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">PDF file</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-10">
+                      <table id="course-list" class="table">
+                        <thead>
+                          <tr>
+                            <th>Course</th>
+                            <th style="width: 40px">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for c in course %}
+                            <tr>
+                              <td>{{c.course_name}} ({{c.short_name}})</td>
+                              <td><button onclick="location.href = '{% url "course_prospectus_report-admin" c.id%}';" type="button" class="btn btn-sm btn-success float-right ">Download</button></td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                  </div>
+              </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-course_prospectus">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+$(function () {
+$('#course-list').DataTable({
+  "paging": true,
+  "lengthChange": false,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": false,
+  "responsive": true,
+ });
+});
+
+
+ 
+</script>
+{% endblock extra_scripts %}
