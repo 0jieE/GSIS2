@@ -1,0 +1,131 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Grades {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Grades</h1>
+            <div>
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item "><a href="{% url "grade-list" %}">select enrollment</a></li>
+                    <li class="breadcrumb-item ">Grades</li>
+                </ol>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                          <a>{{student.user}} {{enrollment.semester}} {{enrollment.school_year}}</a>
+                        </div>
+                        <div class="card-body p-10">
+                          <table id="grades" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Subject</th>
+                                    <th>Midterm grade</th>
+                                    <th>Final grade</th>
+                                    <th>Final re-grade</th>
+                                    <th>Credit Unit</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {% for ed in enrollment_detail %}
+                                    {% if ed.student.id == students.id %}
+                                        {% for st in subject_taken %}
+                                            {% if st.enrollment_detail_id.id == ed.id %}
+                                                {% for cs in class_schedule %}
+                                                    {% if st.schedule_id.id == cs.id and cs.enrollment.id == enrollment.id %}
+                                                        <tr>
+                                                            <td>{{cs.subject}}</td>
+                                                            <td>{{st.midterm_grade}}</td>
+                                                            <td>{{st.final_grade}}</td>
+                                                            <td>{{st.final_re_grade}}</td>
+                                                            {% for subject in subjects  %}
+                                                                {% if subject.id == cs.subject.id%}
+                                                                    {% if not st.final_re_grade == 'not yet graded' and not st.final_re_grade == 'INC' and not st.final_re_grade == 'NG' and not st.final_re_grade == 'in_progress' and not st.final_re_grade == '5' %}
+                                                                        <td>{{subject.credit_unit}}</td> 
+                                                                    {% else %}        
+                                                                        <td>0</td>              
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </tr>    
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                              </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-subject_taken">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+    $(function () {
+        $('#grades').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+
+ 
+</script>
+{% endblock extra_scripts %}

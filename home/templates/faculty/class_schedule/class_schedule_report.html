@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+    <style>
+        h1{
+            text-align:center;
+        }
+        h3{
+            text-align:left;
+        }
+        #table1 {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+    
+        }
+        th{
+            padding: 3px;
+            text-align:center;
+            
+        }
+        td{
+            text-align:center;
+
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    <h1>Class Schedule</h1>
+</head>
+<body>
+    <h3>Faculty: {{faculty}}</h3>
+    <table id="table1">
+        <thead>
+            <tr>
+                <th colspan="4">{{enrollment}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Course/Year level</th>
+                <th>Subject</th>
+                <th>Schedule</th>
+                <th>Room</th>
+            </tr>
+            {% for cs in class_schedules %}
+                {% if enrollment.id == cs.enrollment.id and faculty.id == cs.faculty.id %}
+                    <tr>
+                        {% for c in course  %}
+                            {% if c.id == cs.course.id %} 
+                                <td>{{c.short_name}} | {{cs.year_level}}</td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>{{cs.subject}}</td>
+                        <td>{{cs.schedule}}</td>
+                        <td>{{cs.room}}</td>
+                    </tr>
+                {% endif %}
+           {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html lang="en">

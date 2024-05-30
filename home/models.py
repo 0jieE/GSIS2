@@ -315,7 +315,7 @@ class Class_Schedule(models.Model):
     room = models.ForeignKey(Room, related_name = 'room_class_schedule', on_delete = models.CASCADE)
     year_level = models.CharField(max_length=20, choices=YEAR_LEVEL, default=FIRST_YEAR)
     schedule = models.CharField(max_length=50)
-    faculty = models.ForeignKey(Faculty,related_name='faculty_class_schedule',on_delete = models.CASCADE)
+    faculty = models.ForeignKey(Faculty_user,related_name='faculty_class_schedule',on_delete = models.CASCADE)
 
     def __str__(self):
         template = '{0.subject} {0.schedule}'

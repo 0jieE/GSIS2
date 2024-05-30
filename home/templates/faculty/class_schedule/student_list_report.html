@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+    <style>
+        h1{
+            text-align:center;
+        }
+        h3{
+            text-align:left;
+        }
+        #table1 {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+    
+        }
+        th{
+            padding: 3px;
+            text-align:center;
+            
+        }
+        td{
+            text-align:center;
+
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    <h1>Student List</h1>
+</head>
+<body>
+    <h3>Faculty: {{faculty}}</h3>
+    <table id="table1">
+        <thead>
+            <tr>
+                <th colspan="6">{{class_schedules.subject}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <tr>
+                    <th>Student</th>
+                    <th>Student Type</th>
+                    <th>Student Year</th>
+                    <th>Course</th>
+                    <th>Enrollment Status</th>
+                    <th>Scholarship</th>
+                  </tr>
+            </tr>
+            {% for st in subject_taken  %}
+                {% if class_schedules.id == st.schedule_id.id%}
+                    {% for en in enrollment_detail %}
+                        {% if en.id == st.enrollment_detail_id.id %}
+                        <tr>
+                            <td>{{en.student}}</td>
+                            <td>{{en.student_type}}</td>
+                            <td>{{en.student_year}}</td>
+                            <td>{{en.course_id}}</td>
+                            <td>{{en.enrollment_status}}</td>
+                            <td>{{en.scholarship_id}}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html lang="en">

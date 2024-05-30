@@ -75,7 +75,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                {% if request.user.student %}              
+                {% if not request.user.administrator and not request.user.staff %}              
                   <strong><i class="fas fa-pencil-alt mr-1"></i>Email address</strong>
                     
                   <p class="text-muted">

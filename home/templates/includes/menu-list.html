@@ -4,7 +4,7 @@
     <!-- Add icons to the links using the .nav-icon class
            with font-awesome or any other icon font library -->
 
-    {% admin_get_menu as app_list %}
+    {% comment %} {% admin_get_menu as app_list %} {% endcomment %}
     {% if app_list %}
     {% for app in app_list %}
     {% if app.has_perms and not app.pinned %}
@@ -61,98 +61,43 @@
     {% endif %}
 
     {% if request.user.student %}
-    <li class="nav-header">ENROLLMENT</li>
     <li class="nav-item">
-      <a href="#" class="nav-link {% if 'enrollments' in segment %} active {% endif %}">
+      <a href="{% url "grade-list" %}" class="nav-link {% if 'grade' in segment %} active {% endif %}">
         <i class="nav-icon fas fa-edit"></i>
-        <p>Enrollment Detail</p>
+        <p>Grades</p>
       </a>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link {% if 'enrollments' in segment %} active {% endif %}">
+      <a href="{% url "class_schedule-list" %}" class="nav-link {% if 'class-schedule' in segment %} active {% endif %}">
         <i class="nav-icon fas fa-edit"></i>
-        <p>Assesment</p>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="#" class="nav-link {% if 'enrollments' in segment %} active {% endif %}">
-        <i class="nav-icon fas fa-edit"></i>
-        <p>Payment</p>
-      </a>
-    </li>
-    <li class="nav-header">SCHEDULES</li>
-    <li class="nav-item">
-      <a href="{% url 'class_schedule-admin' %}" class="nav-link {% if 'class_schedule' in segment %} active {% endif %}">
-        <i class="nav-icon far fa-calendar-alt"></i>
         <p>Class Schedule</p>
       </a>
     </li>
     <li class="nav-item">
-      <a href="{% url "subject_taken-admin" %}" class="nav-link {% if 'subject_taken' in segment %} active {% endif %}">
-        <i class="nav-icon fas fa-book"></i>
-        <p>Subject Taken</p>
+      <a href="#" class="nav-link {% if 'cp' in segment %} active {% endif %}">
+        <i class="nav-icon fas fa-edit"></i>
+        <p>Course prospectus</p>
       </a>
     </li>
-    <li class="nav-item">
-      <a href="{% url 'room-admin' %}" class="nav-link {% if 'room' in segment %} active {% endif %}">
-        <i class="fas fa-university nav-icon"></i>
-        <p>Rooms</p>
-      </a>
-    </li> 
-    <li class="nav-header">PREFERENCES</li>
-    <li class="nav-item">
-      <a href="#" class="nav-link {% if 'enrollments' in segment %} active {% endif %}">
-        <i class="far fa-file nav-icon"></i>
-        <p>Course Prospectuse</p>
-      </a>
-    </li>
-    
     {% endif %}
 
     {% if request.user.faculty %}
-    <li class="nav-header">ENROLLMENT</li>
     <li class="nav-item">
-      <a href="#" class="nav-link {% if '#' in segment %} active {% endif %}">
+      <a href="{% url "faculty-grade-list" %}" class="nav-link {% if 'grade' in segment %} active {% endif %}">
         <i class="nav-icon fas fa-edit"></i>
-        <p>Enrollment Detail</p>
+        <p>Grades</p>
       </a>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link {% if '#' in segment %} active {% endif %}">
+      <a href="{% url "faculty-class_schedule-list" %}" class="nav-link {% if 'class-schedule' in segment %} active {% endif %}">
         <i class="nav-icon fas fa-edit"></i>
-        <p>Assesment</p>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="#" class="nav-link {% if '#' in segment %} active {% endif %}">
-        <i class="nav-icon fas fa-edit"></i>
-        <p>Payment</p>
-      </a>
-    </li>
-    <li class="nav-header">SCHEDULES</li>
-    <li class="nav-item">
-      <a href="{% url 'class_schedule-admin' %}" class="nav-link {% if 'class_schedule' in segment %} active {% endif %}">
-        <i class="nav-icon far fa-calendar-alt"></i>
         <p>Class Schedule</p>
       </a>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link {% if '#' in segment %} active {% endif %}">
-        <i class="nav-icon fas fa-book"></i>
-        <p>Subject Taken</p>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="#" class="nav-link {% if 'room' in segment %} active {% endif %}">
-        <i class="fas fa-university nav-icon"></i>
-        <p>Rooms</p>
-      </a>
-    </li> 
-    <li class="nav-header">PREFERENCES</li>
-    <li class="nav-item">
-      <a href="#" class="nav-link {% if '#' in segment %} active {% endif %}">
-        <i class="far fa-file nav-icon"></i>
-        <p>Course Prospectuse</p>
+      <a href="#" class="nav-link {% if 'cp' in segment %} active {% endif %}">
+        <i class="nav-icon fas fa-edit"></i>
+        <p>Course prospectus</p>
       </a>
     </li>
     

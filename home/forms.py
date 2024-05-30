@@ -447,6 +447,11 @@ class AdministratorProfileForm(forms.ModelForm):
         model = Administrator
         fields = ['contact_number',]
 
+class FacultyProfileForm(forms.ModelForm):
+    class Meta:
+        model = Faculty
+        fields = ['contact_number','faculty_title','faculty_position',]
+
 class StudentAccountEditForm(forms.ModelForm):
     class Meta:
         model = Student_user
@@ -457,8 +462,13 @@ class StaffAccountEditForm(forms.ModelForm):
         model = Staff_user
         fields = ('username','first_name','middle_name','last_name','id_no')
 
-class AadministratorAccountEditForm(forms.ModelForm):
+class AdministratorAccountEditForm(forms.ModelForm):
     class Meta:
         model = Administrator_user
+        fields = ('username','first_name','middle_name','last_name','id_no')
+
+class FacultyAccountEditForm(forms.ModelForm):
+    class Meta:
+        model = Faculty_user
         fields = ('username','first_name','middle_name','last_name','id_no')
 

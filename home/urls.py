@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views,student_views, faculty_views
 
 urlpatterns = [
      path("",views.index,name='index'),
@@ -23,7 +23,7 @@ urlpatterns = [
      #pages
      path("administrator/home",views.administrator,name='admin-home'),
      path("staff/home",views.staff,name='staff-home'),
-     path("student/home",views.student,name='student-home'),
+     
 
      #College
      path("administrator/college/list",views.college, name='college-admin'),
@@ -123,5 +123,48 @@ urlpatterns = [
 
      #Student Profile
      path("administrator/student_profile/list",views.student_profile, name='student_profile-admin'),
+
+# /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #####    #######  #     #   ######    ######  #     #   #######
+   #     #      #     #     #   #     #   #       ##    #      #
+   #            #     #     #   #     #   #       # #   #      #
+    #####       #     #     #   #     #   ######  #  #  #      #
+         #      #     #     #   #     #   #       #   # #      #
+   #     #      #     #     #   #     #   #       #    ##      #
+    #####       #      #####    ######    ######  #     #      #
+# ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+     #grades
+     path('student/grades/<int:pk>/', student_views.grades, name='grades'),
+     path('student/grades/report/<int:pk>/', student_views.grades_report, name='grades-report'),
+     path('student/grade/list',student_views.enrollment_grade_list,name='grade-list'),
+
+     #class schedule
+     path('student/class_schedule/<int:pk>/', student_views.class_schedules, name='class_schedule'),
+     path('student/class_schedule/report/<int:pk>/', student_views.class_schedule_report, name='class_schedule-report'),
+     path('student/class_schedule/list',student_views.enrollment_class_schedule_list,name='class_schedule-list'),
+
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   #######      #       #####   #     #  #      #######   #      #
+   #     #     # #     #     #  #     #  #         #       #    #
+   #          #   #    #        #     #  #         #        #  #
+   #####     #######   #        #     #  #         #         ##
+   #         #     #   #        #     #  #         #         #
+   #         #     #   #     #  #     #  #         #        #
+   #         #     #    #####    #####   #######   #       #
+# //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+     #grades
+     path('faculty/grades/<int:pk>/', faculty_views.grades, name='faculty-grades'),
+     path('faculty/grades/report/<int:pk>/', faculty_views.grades_report, name='faculty-grades-report'),
+     path('faculty/grade/list',faculty_views.enrollment_grade_list,name='faculty-grade-list'),
+
+     #class schedule
+     path('faculty/class_schedule/<int:pk>/', faculty_views.faculty_class_schedules, name='faculty-class_schedule'),
+     path('faculty/class_schedule/student_list/<int:pk>/', faculty_views.schedule_student_list, name='schedule_student_list'),
+     path('faculty/class_schedule/report/<int:pk>/', faculty_views.faculty_class_schedule_report, name='faculty-class_schedule-report'),
+     path('faculty/class_schedule_student_list/report/<int:pk>/', faculty_views.class_schedule_student_list_report, name='student_list-report'),
+     path('faculty/class_schedule/list',faculty_views.faculty_class_schedule_list,name='faculty-class_schedule-list'),
+
      
 ]

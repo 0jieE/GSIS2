@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse, JsonResponse
 from xhtml2pdf import pisa
-from .forms import LoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm,AdministratorRegistrationForm, StaffRegistrationForm, StudentRegistrationForm, RegistrationForm, DepartmentForm, CourseForm, CollegeForm, EnrollmentForm, RoomForm, SubjectForm, ClassScheduleForm, PropectuseForm, CoursePropectuseform, StudentProfileForm, StaffProfileForm, AdministratorProfileForm,StudentAccountEditForm, StaffAccountEditForm,AadministratorAccountEditForm, FacultyRegistrationForm, FeesForm, ScholarshipForm, EnrollmentDetailForm, SubjectTakenForm, AssessmentForm, PaymentForm
+from .forms import LoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm,AdministratorRegistrationForm, StaffRegistrationForm, StudentRegistrationForm, RegistrationForm, DepartmentForm, CourseForm, CollegeForm, EnrollmentForm, RoomForm, SubjectForm, ClassScheduleForm, PropectuseForm, CoursePropectuseform, StudentProfileForm, StaffProfileForm, AdministratorProfileForm,StudentAccountEditForm, StaffAccountEditForm,AdministratorAccountEditForm, FacultyRegistrationForm, FeesForm, ScholarshipForm, EnrollmentDetailForm, SubjectTakenForm, AssessmentForm, PaymentForm,FacultyAccountEditForm,FacultyProfileForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetConfirmView, PasswordResetView
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views
@@ -59,10 +59,10 @@ def login_view(request):
                 return redirect('/administrator/enrollment/list')
             elif user is not None and user.faculty:
                 login(request, user)
-                return redirect('/administrator/enrollment/list')
+                return redirect('/faculty/grade/list')
             elif user is not None and user.student:
                 login(request, user)
-                return redirect('/student/home')
+                return redirect('/student/grade/list')
             else:
                 msg= 'invalid credentials'
         else:
@@ -230,7 +230,7 @@ def user_profile(request):
                 acc_id = get_object_or_404(User, pk=request.user.id)
                 user = get_object_or_404(Administrator, user=request.user.id)
                 form = AdministratorProfileForm(request.POST, instance=user)
-                form1 = AadministratorAccountEditForm(request.POST, instance=acc_id)
+                form1 = AdministratorAccountEditForm(request.POST, instance=acc_id)
                 if(request.method == 'POST'):
                     if 'editAbout' in request.POST:
                         if form.is_valid():
@@ -242,7 +242,25 @@ def user_profile(request):
                                 return redirect('user-profile')
                 else:    
                         form = AdministratorProfileForm(instance=user)
-                        form1 = AadministratorAccountEditForm(instance=acc_id)
+                        form1 = AdministratorAccountEditForm(instance=acc_id)
+
+        elif request.user.faculty:
+                acc_id = get_object_or_404(User, pk=request.user.id)
+                user = get_object_or_404(Faculty, user=request.user.id)
+                form = FacultyProfileForm(request.POST, instance=user)
+                form1 = FacultyAccountEditForm(request.POST, instance=acc_id)
+                if(request.method == 'POST'):
+                    if 'editAbout' in request.POST:
+                        if form.is_valid():
+                                form.save()
+                                return redirect('user-profile')
+                    elif 'editAccount' in request.POST:
+                          if form1.is_valid():
+                                form1.save()
+                                return redirect('user-profile')
+                else:    
+                        form = FacultyProfileForm(instance=user)
+                        form1 = FacultyAccountEditForm(instance=acc_id)
     
   return render(request, 'accounts/user_profile.html',{'form':form,'form1':form1,'user':user,'students':students, 'staffs':staffs,'administrators':administrators})
 

@@ -1,0 +1,134 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Class Schedule {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Class Schedule</h1>
+            <div>
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item "><a href="{% url "class_schedule-list" %}">select enrollment</a></li>
+                    <li class="breadcrumb-item ">class schedule</li>
+                </ol>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                          <a>{{student.user}} {{enrollment.semester}} {{enrollment.school_year}}</a>
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-subject_taken" data-toggle="modal" data-target="#new-subject_taken" data-url="{% url "add-subject_taken-admin" %}">Add new</button>
+                        </div>
+                        <div class="card-body p-10">
+                          <table id="subject_taken-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Course/Year level</th>
+                                    <th>Subject</th>
+                                    <th>Faculty</th>
+                                    <th>Schedule</th>
+                                    <th>Room</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                 {% for ed in enrollment_detail %}
+                                    {% if ed.student.id == students.id %}
+                                        {% for st in subject_taken %}
+                                            {% if st.enrollment_detail_id.id == ed.id %}
+                                                {% for cs in class_schedule %}
+                                                    {% if st.schedule_id.id == cs.id and cs.enrollment.id == enrollment.id %}
+                                                        <tr>
+                                                            {% for c in course  %}
+                                                                {% if c.id == cs.course.id %} 
+                                                                    <td>{{c.short_name}} | {{cs.year_level}}</td>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            <td>{{cs.subject}}</td>
+                                                            <td>{{cs.faculty}}</td>
+                                                            <td>{{cs.schedule}}</td>
+                                                            <td>{{cs.room}}</td>
+                                                        </tr>    
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                              </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="new-subject_taken">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+  $(function () {
+    $("#subject_taken-list").DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#subject_taken-list_wrapper .col-md-6:eq(0)');
+    // $('#course_prospectus-list').DataTable({
+    //  "paging": true,
+    //  "lengthChange": false,
+    //  "searching": true,
+    //  "ordering": true,
+    //  "info": true,
+    //  "autoWidth": false,
+    //  "responsive": true,
+    // });
+  });
+
+ 
+</script>
+{% endblock extra_scripts %}
