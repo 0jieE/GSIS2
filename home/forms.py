@@ -439,7 +439,7 @@ class AssessmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AssessmentForm, self).__init__(*args, **kwargs)
-        self.fields['enrollment_detail_id'].widget.attrs['onchange'] = 'calculate_fee_amount()'
+        self.fields['enrollment_detail_id'].widget.attrs['onchange'] = 'calculateFeeAmount()'
         self.fields['fee_id'].widget.attrs['onchange'] = 'calculateFeeAmount()'
 
     def save(self, commit=True):

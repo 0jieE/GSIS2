@@ -149,6 +149,8 @@ urlpatterns = [
      path('student/pre_enroll/', student_views.pre_enroll, name='pre_enroll'),
      path('subjects/<int:schedule_id_id>/pre-enroll/', student_views.pre_enroll_subject, name='pre_enroll-subject'),
      path('subjects/<int:pk>/removed/', student_views.delete_pre_enroll_subject, name='removed-subject'),
+     path('student/assessment/', student_views.student_assessment, name='student-assessment'),
+     path('student.assessment/report', student_views.student_assessment_report, name='student-assessment-report'),
 
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    #######      #       #####   #     #  #      #######   #      #

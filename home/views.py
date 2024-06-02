@@ -1324,6 +1324,8 @@ def assessment(request):
     return render(request, 'administrator/assessment/assessment.html', context)
 
 def add_assessment(request):
+    enrollment_detail = EnrollmentDetail.objects.get(id=12)
+    fee = Fees.objects.get(id=1)
     if request.method == 'POST':
         form = AssessmentForm(request.POST)
         if form.is_valid():
@@ -1338,13 +1340,19 @@ def add_assessment(request):
             data = {'form_is_valid': False, 'errors': form.errors}
             return JsonResponse(data)
     else:
-        form = AssessmentForm()
+        initial_data = {
+            'enrollment_detail_id': enrollment_detail.id,
+            'fee_id':fee.id
+    
+            }
+        form = AssessmentForm(initial = initial_data)
         data = {'html_form': render_to_string('administrator/assessment/add_assessment.html', {'form': form}, request=request)}
         return JsonResponse(data)
 
 def calculate_fee_amount(request):
     enrollment_detail_id = request.GET.get('enrollment_detail_id')
     fee_id = request.GET.get('fee_id')
+    fee = get_object_or_404(Fees,pk=int(fee_id))
 
     if not fee_id:
         return JsonResponse({'error': 'fee_id is empty'})
@@ -1355,7 +1363,7 @@ def calculate_fee_amount(request):
         for subject_taken in subject_taken_list:
             total_credit_units += subject_taken.schedule_id.subject.credit_unit
 
-        fee_amount = total_credit_units * Decimal(fee_id)  # Convert fee_id to Decimal
+        fee_amount = total_credit_units * Decimal(fee.fee_amount)  # Convert fee_id to Decimal
         return JsonResponse({'fee_amount': float(fee_amount)})  # Convert fee_amount to float for JSON response
     except ValueError:
         return JsonResponse({'error': 'Invalid fee_id'})

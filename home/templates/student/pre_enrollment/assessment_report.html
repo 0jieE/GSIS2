@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+    <style>
+        h1{
+            text-align:center;
+        }
+        h3{
+            text-align:left;
+        }
+        #table1 {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+    
+        }
+        th{
+            padding: 3px;
+            text-align:center;
+            
+        }
+        td{
+            text-align:center;
+
+        }
+
+    </style>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>{{student.user}}</h1>
+    <h2>Pre-enrolled subjects</h2>
+    <table>
+        <thead>
+                <tr>
+                    <th>Subject schedule</th>
+                    <th></th>
+                    <th style="text-align:right">lec. unit</th>
+                    <th style="text-align:right">lab. unit</th>
+                </tr>
+        </thead>
+        <tbody>
+            {%for s in subject_taken %}
+                {% if s.enrollment_detail_id.id == enrollment_detail_instance.id %}
+                    <tr>
+                        <td  colspan="2" style="text-align:left">{{s.schedule_id}}</td>
+                        <td style="text-align:right">{{s.schedule_id.subject.lecture_unit}}</td>
+                        <td style="text-align:right">{{s.schedule_id.subject.laboratory_unit}}</td>
+                    </tr>
+                {% endif %}
+            {%endfor%}
+        </tbody>
+    </table>
+                        
+    <br>
+    </br>
+    <table>
+        <thead>
+            <tr>
+                <th>fee name</th>
+                <th>amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in assessment %}
+                {% if enrollment_detail_instance.id == a.enrollment_detail_id.id %}
+                    <tr>
+                        <td>{{a.fee_id}}</td>
+                        <td>{{a.fee_amount}}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td style="text-align:right; font-widget:2px bold"> Total</td>
+                <td>{{total_payment}}</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html lang="en">

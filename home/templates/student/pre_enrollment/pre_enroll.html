@@ -24,7 +24,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div id="myDiv" class="col-6">
+                <div id="myDiv" class="col-4">
                     <div class="card">
                         <div class="card-header">
                             Enrollment form
@@ -33,30 +33,30 @@
                                 <form method='post' >
                                     <div class="card-body">
                                         {% csrf_token %}
-                                        <div class="col-md-12 row">
-                                            <div class="col-md-6">
+                                        
+                                            <div class="col-md-12">
                                                 {{form.enrollment|as_crispy_field}}
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 {{form.student|as_crispy_field}}
                                             </div>
-                                        </div>
-                                        <div class="col-md-12 row">
-                                            <div class="col-md-6">
+                                        
+                                        
+                                            <div class="col-md-12">
                                                 {{form.student_type|as_crispy_field}}
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 {{form.student_year|as_crispy_field}}
                                             </div>
-                                        </div>
-                                        <div class="col-md-12 row">
-                                            <div class="col-md-6">
+                                       
+                                        
+                                            <div class="col-md-12">
                                                 {{form.course_id|as_crispy_field}}
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 {{form.scholarship_id|as_crispy_field}}
                                             </div>
-                                        </div>
+                                        
                                     <!-- /.card-body -->
                     
                                     <div class="card-footer">
@@ -106,10 +106,14 @@
                                                 <td>{{c.year_level}}</td>
                                                 <td>{{c.schedule}}</td>
                                                 <td>
+                                                    {% if not already_assessted %}
                                                     <form action="{% url 'pre_enroll-subject' c.id %}" method="POST">
                                                         {% csrf_token %}
                                                         <button type="submit" class="btn btn-success" name="pre-enroll_subject">select</button>
                                                     </form>
+                                                    {% else %}
+                                                        pre-enrolled
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% endif %}
@@ -123,61 +127,86 @@
                 <div class="col-6">
                     <div class="card">
                         <div class="card-header p-2">
-                            <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#subject_taken" data-toggle="tab">Subjects taken</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#assessment" data-toggle="tab">Assessment</a></li>
-                            </ul>
+                            Subjects/Assessment
                         </div>
                         <div class="card-body">
-                            <div class="tab-content">
-                                <div class="active tab-pane" id="subject_taken">
-                                    <table id="subject_taken-list" class="table table-bordered table-hover table-sm">
-                                        <thead>
-                                                <tr>
-                                                    <th>Subject schedule</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                        </thead>
-                                        <tbody>
-                                            {%for s in subject_taken %}
+                            <table id="subject_taken-list" class="table table-bordered table-hover table-sm">
+                                <thead>
+                                        <tr>
+                                            <th>Subject schedule</th>
+                                            <th>lec. unit</th>
+                                            <th>lab. unit</th>
+                                            <th>Action</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                    {%for s in subject_taken %}
+                                        {% if not enrollment_detail_instance %}
+                                            <tr>
+                                                <td colspan="2" style="text-align:center; ">No subject available related to your courses yet</td>
+                                            </tr>
+                                        {% else %}
+                                            {% if s.enrollment_detail_id.id == enrollment_detail_instance.id %}
                                                 <tr>
                                                     <td>{{s.schedule_id}}</td>
+                                                    <td>{{s.schedule_id.subject.lecture_unit}}</td>
+                                                    <td>{{s.schedule_id.subject.laboratory_unit}}</td>
                                                     <td>
+                                                        {% if not already_assessted %}
                                                         <form action="{% url 'removed-subject' s.pk %}" method="POST">
                                                             {% csrf_token %}
                                                             <button type="submit" class="btn btn-danger" name="removed_subject">removed</button>
                                                         </form>
+                                                        {% else %}
+                                                            taken
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
-                                            {%endfor%}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane" id="assessment">
-                                    <table id="assessment-list" class="table table-bordered table-hover table-sm">
-                                        <thead>
-                                                <tr>
-                                                    <th>fee name</th>
-                                                    <th>amount</th>
-                                                    <th>multiplier</th>
-                                                    <th>total</th>
-                                                </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr>
-                                                    <td>tuition fee</td>
-                                                    <td>250/unit</td>
-                                                    <td>9</td>
-                                                    <td>2250</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3" style="text-align:right; font-widget:2px bold">Grand Total</td>
-                                                    <td>2250</td>
-                                                </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            {% endif %}
+                                        {%endif%}
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                            {% if not already_assessted %}
+                            <form action="{% url 'student-assessment'%}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary float-right" name="assessment">Done</button>
+                            </form>
+                            {% else %}
+                            <div>
+                            <br>
+                            </br>
                             </div>
+                            <table id="assessment-list" class="table table-bordered table-hover table-sm">
+                                <thead>
+                                        <tr>
+                                            <th>fee name</th>
+                                            <th>amount</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                    {% for a in assessment %}
+                                        {% if not enrollment_detail_instance %}
+                                            <tr>
+                                                <td colspan="2" style="text-align:center; ">No subject available related to your courses yet</td>
+                                            </tr>
+                                        {% else %}
+                                        {% if enrollment_detail_instance.id == a.enrollment_detail_id.id %}
+                                            <tr>
+                                                <td>{{a.fee_id}}</td>
+                                                <td>{{a.fee_amount}}</td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <tr>
+                                        <td style="text-align:right; font-widget:2px bold"> Total</td>
+                                        <td>{{total_payment}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button onclick="location.href = '{% url "student-assessment-report" %}';" type="button" class="btn btn-sm btn-primary float-right ">PDF</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
