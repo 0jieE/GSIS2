@@ -1,16 +1,12 @@
-{%for a in assessment %}
-    <tr>
-        <td>{{a.enrollment_detail_id}}</td>
-        <td>{{a.fee_id}}</td>
-        <td>{{a.fee_amount}}</td>
-        <td>{{a.is_paid}}</td>
-        <td>
-            <button class="btn btn-primary btn-sm js-edit-assessment" data-url="{% url "edit-assessment-admin" a.pk%}">
-                Edit
-            </button>
-            <button class="btn btn-sm btn-danger js-delete-assessment" data-url="{% url "delete-assessment-admin" a.pk%}">
-                Delete
-            </button>
-        </td>
-    </tr>
-{%endfor%}
+{% for assessment in assessments %}
+<tr>
+    <td>{{ assessment.enrollment_detail_id }}</td>
+    <td>{{ assessment.fee_id }}</td>
+    <td>{{ assessment.fee_amount }}</td>
+    <td>{{ assessment.is_paid }}</td>
+    <td>
+        <button type="button" class="btn btn-sm btn-warning js-edit-assessment" data-url="{% url 'edit-assessment-admin' assessment.pk %}">Edit</button>
+        <button type="button" class="btn btn-sm btn-danger js-delete-assessment" data-url="{% url 'delete-assessment-admin' assessment.pk %}">Delete</button>
+    </td>
+</tr>
+{% endfor %}

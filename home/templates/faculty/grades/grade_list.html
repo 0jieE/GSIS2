@@ -1,0 +1,26 @@
+{% for st in subject_taken  %}
+    {% if class_schedules.id == st.schedule_id.id%}
+        {% for en in enrollment_detail %}
+            {% if en.id == st.enrollment_detail_id.id %}
+                <tr>
+                    <td>{{en.student}}</td>
+                    <td>{{st.midterm_grade}}</td>
+                    <td>{{st.final_grade}}</td>
+                    <td>{{st.final_re_grade}}</td>
+                    {% for subject in subjects  %}
+                        {% if subject.id == class_schedules.subject.id%}
+                            {% if not st.final_re_grade == 'not yet graded' and not st.final_re_grade == 'INC' and not st.final_re_grade == 'NG' and not st.final_re_grade == 'in_progress' and not st.final_re_grade == '5' %}
+                                <td>{{subject.credit_unit}}</td> 
+                            {% else %}        
+                                <td>0</td>              
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <button class="btn btn-primary btn-sm js-edit-grade" data-url="{% url "edit-grade" st.pk %}">edit grade</button>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}

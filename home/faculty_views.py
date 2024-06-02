@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse, JsonResponse
 from xhtml2pdf import pisa
-from .forms import LoginForm
+from .forms import LoginForm,SubjectTakenForm
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout, authenticate,login
@@ -28,46 +28,97 @@ def enrollment_grade_list(request):
         }
         return render(request, 'faculty/grades/enrollment_grades.html',context)
 
-def grades(request,pk):
+    
+def course_grade(request,pk):
     if not request.user.is_authenticated:
         return redirect("login")
     else:
+        course = Course.objects.all()
         subjects = Subject.objects.all()
         class_schedules = Class_Schedule.objects.all()
         subject_taken = SubjectTaken.objects.all()
         enrollment = Enrollment.objects.get(id=pk)
-        students = Student_user.objects.get(id=request.user.id)
+        faculty = Faculty_user.objects.get(id=request.user.id)
         enrollment_detail = EnrollmentDetail.objects.all()
         context = {
               'parent':'',
               'segment':'grade',
               'subject_taken':subject_taken,   
-              'students':students,
+              'faculty':faculty,
               'enrollment':enrollment,
               'enrollment_detail':enrollment_detail, 
-              'class_schedule':class_schedules,  
+              'class_schedules':class_schedules,  
               'subjects':subjects,
-        }
+              'course':course,
+        }  
+        return render(request, 'faculty/grades/course_grade.html',context)
+    
+def grades(request,pk):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        subjects = Subject.objects.all()
+        class_schedules = Class_Schedule.objects.get(id=pk)
+        subject_taken = SubjectTaken.objects.all()
+        faculty = Faculty_user.objects.get(id=request.user.id)
+        enrollment_detail = EnrollmentDetail.objects.all()
+        context = {
+              'parent':'',
+              'segment':'grade',
+              'subject_taken':subject_taken,   
+              'faculty':faculty,
+              'enrollment_detail':enrollment_detail, 
+              'class_schedules':class_schedules, 
+              'subjects':subjects, 
+        } 
         return render(request, 'faculty/grades/grades.html',context)
+
+def edit_grade(request,pk):
+    subject_taken = get_object_or_404(SubjectTaken, pk=pk)
+    if(request.method == 'POST'):
+            form = SubjectTakenForm(request.POST, instance=subject_taken)
+    else:    
+            form = SubjectTakenForm(instance=subject_taken)
+    return save_grade(request, form, 'faculty/grades/edit_grade.html')
+
+
+def save_grade(request, form, template_name):
+    data = dict()
+    if form.is_valid():
+        form.save()
+        data['form_is_valid'] = True
+        subjects = Subject.objects.all()
+        subject_taken = SubjectTaken.objects.all()
+        faculty = Faculty_user.objects.get(id=request.user.id)
+        enrollment_detail = EnrollmentDetail.objects.all()
+        data['grade_list'] = render_to_string('faculty/grades/grade_list.html',{'subject_taken':subject_taken,
+                                                                                'subject_taken':subject_taken,   
+                                                                                'faculty':faculty,
+                                                                                'enrollment_detail':enrollment_detail, 
+                                                                                'subjects':subjects, })
+    else:
+        data['form_is_valid'] = False
+
+    context = {'form':form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+    
     
 def grades_report(request,pk):
     subjects = Subject.objects.all()
-    class_schedules = Class_Schedule.objects.all()
+    class_schedules = Class_Schedule.objects.get(id=pk)
     subject_taken = SubjectTaken.objects.all()
-    enrollment = Enrollment.objects.get(id=pk)
-    students = Student_user.objects.get(id=request.user.id)
+    faculty = Faculty_user.objects.get(id=request.user.id)
     enrollment_detail = EnrollmentDetail.objects.all()
     context = {
             'parent':'',
             'segment':'grade',
             'subject_taken':subject_taken,   
-            'students':students,
-            'enrollment':enrollment,
+            'faculty':faculty,
             'enrollment_detail':enrollment_detail, 
-            'class_schedule':class_schedules,  
-            'subjects':subjects,
-    }
-
+            'class_schedules':class_schedules, 
+            'subjects':subjects, 
+    } 
     html = get_template('faculty/grades/grades_report.html').render(context)
 
 
@@ -136,6 +187,7 @@ def schedule_student_list(request,pk):
               'class_schedules':class_schedules,  
         }  
         return render(request, 'faculty/class_schedule/schedule_student_list.html',context)
+    
     
 def faculty_class_schedule_report(request,pk):
     course = Course.objects.all()

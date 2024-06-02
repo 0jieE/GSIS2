@@ -37,7 +37,7 @@
                           <b>{{faculty}}</b><b class="float-right">{{class_schedules.subject}} </b>
                         </div>
                         <div class="card-body p-10">
-                          <table id="subject_taken-list" class="table table-bordered table-hover table-sm">
+                          <table id="student-list" class="table table-bordered table-hover table-sm">
                               <thead>
                                   <tr>
                                     <th>Student</th>
@@ -107,20 +107,15 @@
 <script>
 
   $(function () {
-    $("#subject_taken-list").DataTable({
-      "responsive": true, "lengthChange": true, "autoWidth": false,
-      "buttons": ["csv", "excel", "pdf", "print"]
-      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#subject_taken-list_wrapper .col-md-6:eq(0)');
-    // $('#course_prospectus-list').DataTable({
-    //  "paging": true,
-    //  "lengthChange": false,
-    //  "searching": true,
-    //  "ordering": true,
-    //  "info": true,
-    //  "autoWidth": false,
-    //  "responsive": true,
-    // });
+    $('#student-list').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+    });
   });
 
  

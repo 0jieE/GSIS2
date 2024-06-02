@@ -1,4 +1,5 @@
 import re
+from decimal import Decimal
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
@@ -1314,58 +1315,86 @@ def student_grade_report(request,pk1,pk2):
 def assessment(request):
     if not request.user.is_authenticated:
         return redirect("login")
-    else:
-        assessment = Assessment.objects.all()
-        context = {
-              'parent':'',
-              'segment':'assessment',
-              'assessment':assessment,        
-        }
-        return render(request, 'administrator/assessment/assessment.html',context)
+    assessments = Assessment.objects.all()
+    context = {
+        'parent': '',
+        'segment': 'assessment',
+        'assessments': assessments,
+    }
+    return render(request, 'administrator/assessment/assessment.html', context)
 
 def add_assessment(request):
-        if(request.method == 'POST'):
-                form = AssessmentForm(request.POST)
-        else:    
-                form = AssessmentForm()
+    if request.method == 'POST':
+        form = AssessmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            assessments = Assessment.objects.all()
+            data = {
+                'form_is_valid': True,
+                'assessment_list': render_to_string('administrator/assessment/list_assessment.html', {'assessments': assessments})
+            }
+            return JsonResponse(data)
+        else:
+            data = {'form_is_valid': False, 'errors': form.errors}
+            return JsonResponse(data)
+    else:
+        form = AssessmentForm()
+        data = {'html_form': render_to_string('administrator/assessment/add_assessment.html', {'form': form}, request=request)}
+        return JsonResponse(data)
 
-        return save_assessment(request, form, 'administrator/assessment/add_assessment.html')
+def calculate_fee_amount(request):
+    enrollment_detail_id = request.GET.get('enrollment_detail_id')
+    fee_id = request.GET.get('fee_id')
 
+    if not fee_id:
+        return JsonResponse({'error': 'fee_id is empty'})
 
-def edit_assessment(request,pk):
-        assessment = get_object_or_404(Assessment, pk=pk)
-        if(request.method == 'POST'):
-                form = AssessmentForm(request.POST, instance=assessment)
-        else:    
-                form = AssessmentForm(instance=assessment)
+    try:
+        total_credit_units = 0
+        subject_taken_list = SubjectTaken.objects.filter(enrollment_detail_id=enrollment_detail_id)
+        for subject_taken in subject_taken_list:
+            total_credit_units += subject_taken.schedule_id.subject.credit_unit
+
+        fee_amount = total_credit_units * Decimal(fee_id)  # Convert fee_id to Decimal
+        return JsonResponse({'fee_amount': float(fee_amount)})  # Convert fee_amount to float for JSON response
+    except ValueError:
+        return JsonResponse({'error': 'Invalid fee_id'})
+
+def edit_assessment(request, pk):
+    assessment = get_object_or_404(Assessment, pk=pk)
+    if request.method == 'POST':
+        form = AssessmentForm(request.POST, instance=assessment)
         return save_assessment(request, form, 'administrator/assessment/edit_assessment.html')
-
-
-def delete_assessment(request,pk):
-        assessment = get_object_or_404(Assessment, pk=pk)
-        data = dict()
-        if request.method == 'POST':
-            assessment.delete()
-            data['form_is_valid'] = True
-            assessment= Assessment.objects.all()
-            data['assessment_list'] = render_to_string('administrator/assessment/list_assessment.html',{'assessment':assessment})
-        else:    
-            context = {'assessment':assessment}
-            data['html_form'] = render_to_string('administrator/assessment/delete_assessment.html',context,request=request)
+    else:
+        form = AssessmentForm(instance=assessment)
+        data = {'html_form': render_to_string('administrator/assessment/edit_assessment.html', {'form': form}, request=request)}
         return JsonResponse(data)
 
 
+def delete_assessment(request, pk):
+    assessment = get_object_or_404(Assessment, pk=pk)
+    data = {}
+    if request.method == 'POST':
+        assessment.delete()
+        data['form_is_valid'] = True
+        assessments = Assessment.objects.all()
+        data['assessment_list'] = render_to_string('administrator/assessment/list_assessment.html', {'assessments': assessments})
+    else:
+        context = {'assessment': assessment}
+        data['html_form'] = render_to_string('administrator/assessment/delete_assessment.html', context, request=request)
+    return JsonResponse(data)
+
+
 def save_assessment(request, form, template_name):
-    data = dict()
+    data = {}
     if form.is_valid():
         form.save()
         data['form_is_valid'] = True
-        assessment= Assessment.objects.all()
-        data['assessment_list'] = render_to_string('administrator/assessment/list_assessment.html',{'assessment':assessment})
+        assessments = Assessment.objects.all()
+        data['assessment_list'] = render_to_string('administrator/assessment/list_assessment.html', {'assessments': assessments})
     else:
         data['form_is_valid'] = False
-
-    context = {'form':form}
+    context = {'form': form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
 
@@ -1389,6 +1418,8 @@ def payment(request):
         return render(request, 'administrator/payment/payment.html',context)
 
 def add_payment(request):
+        subjects_taken = SubjectTaken.objects.all()
+        
         if(request.method == 'POST'):
                 form = PaymentForm(request.POST)
         else:    

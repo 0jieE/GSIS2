@@ -3,6 +3,11 @@
         <td>{{e.enrollment_description}}</td>
         <td>{{e.semester}}</td>
         <td>{{e.school_year}}</td>
+        {% if e.enrollment_ended == 1 %}   
+            <td>Ended</td>
+        {% else %}
+            <td>Ongoing</td>
+        {% endif %}
         <td>
             <button class="btn btn-primary btn-sm js-edit-enrollment" data-url="{% url "edit-enrollment-admin" e.pk%}">
                 Edit

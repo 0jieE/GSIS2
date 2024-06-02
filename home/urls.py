@@ -112,6 +112,7 @@ urlpatterns = [
      #Assessment
      path("administrator/assessment/list",views.assessment, name='assessment-admin'),
      path("administrator/assessment/add",views.add_assessment, name='add-assessment-admin'),
+     path("calculate_fee_amount/", views.calculate_fee_amount, name='calculate-fee-amount'),
      path('administrator/assessment/<int:pk>/edit/', views.edit_assessment, name='edit-assessment-admin'),
      path('administrator/assessment/<int:pk>/delete/', views.delete_assessment, name='delete-assessment-admin'),
 
@@ -144,6 +145,11 @@ urlpatterns = [
      path('student/class_schedule/report/<int:pk>/', student_views.class_schedule_report, name='class_schedule-report'),
      path('student/class_schedule/list',student_views.enrollment_class_schedule_list,name='class_schedule-list'),
 
+     #pre-enroll
+     path('student/pre_enroll/', student_views.pre_enroll, name='pre_enroll'),
+     path('subjects/<int:schedule_id_id>/pre-enroll/', student_views.pre_enroll_subject, name='pre_enroll-subject'),
+     path('subjects/<int:pk>/removed/', student_views.delete_pre_enroll_subject, name='removed-subject'),
+
 # //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    #######      #       #####   #     #  #      #######   #      #
    #     #     # #     #     #  #     #  #         #       #    #
@@ -157,7 +163,9 @@ urlpatterns = [
      #grades
      path('faculty/grades/<int:pk>/', faculty_views.grades, name='faculty-grades'),
      path('faculty/grades/report/<int:pk>/', faculty_views.grades_report, name='faculty-grades-report'),
+     path('faculty/edit_grade/<int:pk>/edit/', faculty_views.edit_grade, name='edit-grade'),
      path('faculty/grade/list',faculty_views.enrollment_grade_list,name='faculty-grade-list'),
+     path('faculty/course_grade/<int:pk>/', faculty_views.course_grade, name='course_grade'),
 
      #class schedule
      path('faculty/class_schedule/<int:pk>/', faculty_views.faculty_class_schedules, name='faculty-class_schedule'),
@@ -166,5 +174,4 @@ urlpatterns = [
      path('faculty/class_schedule_student_list/report/<int:pk>/', faculty_views.class_schedule_student_list_report, name='student_list-report'),
      path('faculty/class_schedule/list',faculty_views.faculty_class_schedule_list,name='faculty-class_schedule-list'),
 
-     
 ]

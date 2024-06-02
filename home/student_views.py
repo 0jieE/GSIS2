@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse, JsonResponse
 from xhtml2pdf import pisa
-from .forms import LoginForm
+from .forms import LoginForm, StudentPreEnrollmentForm,SubjectTakenForm, AssessmentForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetConfirmView, PasswordResetView
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views
@@ -150,3 +150,77 @@ def class_schedule_report(request,pk):
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
+
+
+#/////////////////////////////////////////
+# pre_enroll
+#////////////////////////////////////////
+
+def pre_enroll(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    else:
+        subject_taken = SubjectTaken.objects.all()
+        class_schedules = Class_Schedule.objects.all()
+        enrollment = Enrollment.objects.all()
+        is_pre_enrolled = False
+        try:
+            enrollmentDetail = EnrollmentDetail.objects.get(student=request.user.id)
+            found = True
+        except EnrollmentDetail.DoesNotExist:
+            found = False
+        
+        # Use the 'found' variable as needed in your view logic
+        if found:
+            is_pre_enrolled = True
+            enrollment_detail_instance = enrollmentDetail
+        else:
+            is_pre_enrolled = False
+            enrollment_detail_instance = None
+        if request.method == "POST":
+            if 'pre-enroll_student' in request.POST:
+                form = StudentPreEnrollmentForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    return redirect("pre_enroll")
+            if 'pre-enroll_subject' in request.POST:
+                    return redirect("pre_enroll-subject")
+            if 'removed_subject' in request.POST:
+                    return redirect("removed-subject")
+        else:
+            for e in enrollment:    
+                if e.enrollment_ended == False:
+                    enrollment_id = e
+            student = request.user
+            initial_data = {
+            'student': student.id,
+    
+            'enrollment': enrollment_id.id,
+            }
+            form = StudentPreEnrollmentForm(initial=initial_data)
+        context = {
+              'parent':'',
+              'segment':'pre-enroll',
+              'form':form,
+              'is_pre_enrolled':is_pre_enrolled,
+              'enrollment':enrollment,
+              'enrollment_id':enrollment_id,
+              'class_schedules':class_schedules, 
+              'subject_taken':subject_taken, 
+              'enrollment_detail_instance':enrollment_detail_instance,
+        }
+        return render(request, 'student/pre_enrollment/pre_enroll.html',context)
+    
+
+def pre_enroll_subject(request, schedule_id_id):
+    class_id = Class_Schedule.objects.get(pk=schedule_id_id)
+    enrollment_detail_id = EnrollmentDetail.objects.get(student=request.user.id)
+    SubjectTaken.objects.create(schedule_id = class_id, enrollment_detail_id=enrollment_detail_id,is_pre_enroll=True)
+    return redirect('pre_enroll') 
+
+def delete_pre_enroll_subject(request, pk):
+    subject = get_object_or_404(SubjectTaken, pk=pk)
+    if request.method == 'POST':
+        subject.delete()
+    return redirect('pre_enroll') 
+    

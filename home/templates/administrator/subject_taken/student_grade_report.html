@@ -36,27 +36,29 @@
     <section>
         <div class="container-fluid">
             {% for year_level in sorted_year_levels %} 
-                <br></br>
                 <h1 class="card-title">{{ year_level }}</h1>
                     {% for semester in semesters %}
-                        {% if semester == '1st'%}
-                            <h3>{{semester}} Semester</h3>
-                        {% elif semester == "2nd"  %}
-                            <h3>{{semester}} Semester</h3>
-                        {% else %}
-                            <h3>{{semester}}</h3>
-                        {% endif %}
                         <table id="table1">
                             <thead>
+                                <tr>
+                                    {% if semester == '1st'%}
+                                    <th colspan="5">{{semester}} semester</th>
+                                    {% elif semester == "2nd"  %}
+                                    <th colspan="5">{{semester}} semester</th>
+                                    {% else %}
+                                    <th colspan="5">{{semester}}</th>
+                                    {% endif %}
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <th>Subject Code/Description</th>
                                     <th>Midter Grade</th>
                                     <th>Final Grade</th>
                                     <th>Final Re-grade</th>
                                     <th>Credit Unit</th>
-                                </tr>
-                            </thead>
-                            <tbody>  
+                                </tr>  
                             {% for c in course_prospectus  %}
                                 {% if course.id == c.course_id and c.year_level == year_level and c.semester == semester%}
                                     <tr>

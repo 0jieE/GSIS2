@@ -17,8 +17,8 @@
           <div class="col-sm-6">
             <h1>Enrollments Grade</h1>
               <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item "><a href="{% url "grade-list" %}">select enrollment</a></li>
-                <li class="breadcrumb-item ">Grades</li>
+                <li class="breadcrumb-item "><a href="{% url "faculty-grade-list" %}">select enrollment</a></li>
+                <li class="breadcrumb-item ">select classes</li>
               </ol>
           </div>
       </div><!-- /.container-fluid -->
@@ -46,8 +46,7 @@
                                     <tr>
                                         <td>{{e.semester}}</td>
                                         <td>{{e.school_year}}</td>
-                                        <td><button onclick="location.href = '{% url "grades" e.id %}';" type="button" class="btn btn-sm btn-success float-right ">view</button>
-                                            <button onclick="location.href = '{% url "grades-report" e.id %}';" type="button" class="btn btn-sm btn-primary float-right ">PDF</button>
+                                        <td><button onclick="location.href = '{% url "course_grade" e.id %}';" type="button" class="btn btn-sm btn-success float-right ">select</button>
                                         </td>
                                     </tr>
                                 {% endfor %}

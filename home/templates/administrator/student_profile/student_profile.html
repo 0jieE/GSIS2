@@ -27,7 +27,7 @@
                     <div class="card">
                         <div class="card-header">
         
-                          {% comment %} <button type="button" class="btn btn-sm btn-primary float-right  js-add-payment" data-toggle="modal" data-target="#new-payment" data-url="{% url "add-payment-admin" %}">Add new</button> {% endcomment %}
+                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-payment" data-toggle="modal" data-target="#new-payment" data-url="#">Register new</button>
                         </div>
                         <div class="card-body p-10">
                           <table id="payment-list" class="table table-bordered table-hover table-sm">
@@ -37,14 +37,86 @@
                                     <th>Name</th>
                                     <th>Program</th>
                                     <th>Year Level</t>
+                                    <th></t>
                                   </tr>
                               </thead>
                               <tbody>
-                                <tr>
+                                  <tr>
                                     <td>24-1234</td>
-                                    <td>Arnold Smith</td>
-                                    <td>MIS</td>
-                                    <td>2n Year</td>
+                                    <td>Arnold Taylor Smith</td>
+                                    <td>Master in Information System(MIS)</td>
+                                    <td>2nd Year</td>
+                                    <td>
+                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
+                                          Edit
+                                      </button>
+                                  </td>
+                                  </tr>
+                                  <tr>
+                                    <td>24-1263</td>
+                                    <td>Jason Latosa Gatong</td >
+                                    <td>Master in Public Administration(MPA)</td>
+                                    <td>1st Year</td>
+                                    <td>
+                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
+                                          Edit
+                                      </button>
+                                  </td>
+                                  </tr>
+                                  <tr>
+                                    <td>24-1429</td>
+                                    <td>Jayvee Chavez Alcantara</td >
+                                    <td>Master in Information System(MIS)</td>
+                                    <td>1st Year</td>
+                                    <td>
+                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
+                                          Edit
+                                      </button>
+                                  </td>
+                                  </tr>
+                                  <tr>
+                                    <td>24-2467</td>
+                                    <td>Prexter Aurelio Macaraeg</td >
+                                    <td>Master in Science in Biology(MSB)</td>
+                                    <td>3rd Year</td>
+                                    <td>
+                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
+                                          Edit
+                                      </button>
+                                  </td>
+                                  </tr>
+                                  <tr>
+                                    <td>24-1378</td>
+                                    <td>Abegail Manlabi Garcia</td >
+                                    <td>Master in Information System(MIS)</td>
+                                    <td>2nd Year</td>
+                                    <td>
+                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
+                                          Edit
+                                      </button>
+                                  </td>
+                                  </tr>
+                                  <tr>
+                                    <td>24-1321</td>
+                                    <td>Jade Marfil Cordevilla</td >
+                                      <td>Master in Science in Biology(MSb)</td>
+                                    <td>2nd Year</td>
+                                    <td>
+                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
+                                          Edit
+                                      </button>
+                                  </td>
+                                  </tr>
+                                  <tr>
+                                    <td>24-1222</td>
+                                    <td>Denim Angeles Fortin</td >
+                                    <td>Master in Information System(MIS)</td>
+                                    <td>1st Year</td>
+                                    <td>
+                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
+                                          Edit
+                                      </button>
+                                  </td>
                                   </tr>
                                 {% comment %} {% include "administrator/payment/list_payment.html" %} {% endcomment %}
                               </tbody>

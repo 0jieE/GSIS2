@@ -17,7 +17,7 @@
           <div class="col-sm-6">
             <h1>Enrollments Class Schedule</h1>
               <ol class="breadcrumb float-sm-left">
-                <li class="breadcrumb-item "><a href="{% url "class_schedule-list" %}">select enrollment</a></li>
+              <li class="breadcrumb-item "><a href="{% url "faculty-class_schedule-list" %}">select enrollment</a></li>
               </ol>
           </div>
       </div><!-- /.container-fluid -->
@@ -84,15 +84,15 @@
 <script>
 
 $(function () {
-$('#enrollment-list').DataTable({
-    "paging": true,
-    "lengthChange": false,
-    "searching": true,
-    "ordering": true,
-    "info": true,
-    "autoWidth": false,
-    "responsive": true,
-});
+  $('#enrollment-list').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+  });
 });
 
  

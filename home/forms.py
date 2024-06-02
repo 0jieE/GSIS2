@@ -318,11 +318,12 @@ class EnrollmentForm(forms.ModelForm):
     #updated ***
     class Meta:
         model = Enrollment
-        fields = ['enrollment_description','semester','school_year']
+        fields = ['enrollment_description','semester','school_year','enrollment_ended']
         widgets= {
                 'enrollment_description' : forms.Textarea(attrs={'class':'form-control', 'rows': 3, 'placeholder':'Description'}),
                 'semester': forms.Select(attrs={'class':'form-control'}),
                 'school_year': forms.Select(attrs={'class':'form-control'}),
+                
             }
 
 class RoomForm(forms.ModelForm):
@@ -400,9 +401,24 @@ class FeesForm(forms.ModelForm):
 class EnrollmentDetailForm(forms.ModelForm):
     class Meta:
         model = EnrollmentDetail
-        fields = ['student','student_type', 'student_year', 'course_id', 'scholarship_id', 'enrollment_status']
+        fields = ['enrollment','student','student_type', 'student_year', 'course_id', 'scholarship_id', 'enrollment_status']
         widgets = {
+            'enrollment' : forms.Select(attrs={'class':'form-control'}),
             'student' : forms.Select(attrs={'class':'form-control'}),
+            'student_type' : forms.Select(attrs={'class':'form-control'}),
+            'student_year' : forms.Select(attrs={'class':'form-control'}),
+            'course_id' : forms.Select(attrs={'class':'form-control'}),
+            'scholarhip_id' : forms.Select(attrs={'class':'form-control'}),
+            'enrollment_status' : forms.Select(attrs={'class':'form-control'})
+        }
+
+class StudentPreEnrollmentForm(forms.ModelForm):
+    class Meta:
+        model = EnrollmentDetail
+        fields = ['enrollment','student','student_type', 'student_year', 'course_id', 'scholarship_id', 'enrollment_status']
+        widgets = {
+            'enrollment' : forms.HiddenInput(),
+            'student' : forms.HiddenInput(),
             'student_type' : forms.Select(attrs={'class':'form-control'}),
             'student_year' : forms.Select(attrs={'class':'form-control'}),
             'course_id' : forms.Select(attrs={'class':'form-control'}),
@@ -415,10 +431,45 @@ class SubjectTakenForm(forms.ModelForm):
         model = SubjectTaken
         fields = ['schedule_id', 'enrollment_detail_id','is_pre_enroll','is_registered', 'is_dropped', 'midterm_grade', 'final_grade', 'final_re_grade']
 
+
 class AssessmentForm(forms.ModelForm):
     class Meta:
         model = Assessment
         fields = ['enrollment_detail_id', 'fee_id', 'fee_amount', 'is_paid']
+
+    def __init__(self, *args, **kwargs):
+        super(AssessmentForm, self).__init__(*args, **kwargs)
+        self.fields['enrollment_detail_id'].widget.attrs['onchange'] = 'calculate_fee_amount()'
+        self.fields['fee_id'].widget.attrs['onchange'] = 'calculateFeeAmount()'
+
+    def save(self, commit=True):
+        assessment = super(AssessmentForm, self).save(commit=False)
+        enrollment_detail_id = self.cleaned_data['enrollment_detail_id']
+        fee_id = self.cleaned_data['fee_id']
+
+        # Calculate fee_amount based on the conditions
+        if fee_id.is_multiplier:
+            # Fetch the total number of credit_unit of the Subject based on EnrollmentDetail and SubjectTaken and Subject
+            total_credit_units = self.calculate_total_credit_units(enrollment_detail_id)
+            fee_amount = fee_id.fee_amount * total_credit_units
+            assessment.fee_amount = fee_amount
+        else:
+            assessment.fee_amount = fee_id.fee_amount
+
+        if commit:
+            assessment.save()
+        return assessment
+
+    def calculate_total_credit_units(self, enrollment_detail_id):
+        # Implement your logic to calculate total credit units based on EnrollmentDetail and SubjectTaken
+        # This could involve querying related models to sum up credit units
+        # For demonstration, let's assume a simple calculation
+        total_credit_units = 0
+        # Fetch related SubjectTaken objects based on enrollment_detail_id
+        subject_taken_list = SubjectTaken.objects.filter(enrollment_detail_id=enrollment_detail_id)
+        for subject_taken in subject_taken_list:
+            total_credit_units += subject_taken.schedule_id.subject.credit_unit
+        return total_credit_units
 
 class PaymentForm(forms.ModelForm):
     class Meta:

@@ -1,0 +1,227 @@
+{% extends 'layouts/base.html' %}
+{%load crispy_forms_tags%}
+{% load static %}
+{% block title %} Pre Enrollment  {% endblock title %}
+{% block extrastyle %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock extrastyle %}
+{% block bodyclass %} hold-transition sidebar-mini {% endblock bodyclass %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Pre-Enrollment</h1>
+          </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    {% if not is_pre_enrolled %}
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div id="myDiv" class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Enrollment form
+                        </div>
+                            <div class="card-body p-10">
+                                <form method='post' >
+                                    <div class="card-body">
+                                        {% csrf_token %}
+                                        <div class="col-md-12 row">
+                                            <div class="col-md-6">
+                                                {{form.enrollment|as_crispy_field}}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{form.student|as_crispy_field}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 row">
+                                            <div class="col-md-6">
+                                                {{form.student_type|as_crispy_field}}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{form.student_year|as_crispy_field}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 row">
+                                            <div class="col-md-6">
+                                                {{form.course_id|as_crispy_field}}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{form.scholarship_id|as_crispy_field}}
+                                            </div>
+                                        </div>
+                                    <!-- /.card-body -->
+                    
+                                    <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary " name="pre-enroll_student">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% else %}
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                          Pre-enroll subjects
+                        </div>
+                        <div class="card-body p-10">
+                          <table id="class_schedule-list" class="table table-bordered table-hover table-sm">
+                              <thead>
+                                  <tr>
+                                    <th>Subject</th>
+                                    <th>Faculty</th>
+                                    <th>Room</th>
+                                    <th>Year</th>
+                                    <th>Schedule</th>
+                                    <th>Action</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {%for c in class_schedules %}
+                                    {% if not enrollment_detail_instance %}
+                                        <tr>
+                                            <td colspan="6" style="text-align:center; ">No subject available related to your courses yet</td>
+                                        </tr>
+                                    {% else %}
+                                        {% if c.course.id == enrollment_detail_instance.course_id.id and c.enrollment.id == enrollment_id.id %}
+                                            <tr>
+                                                <td>{{c.subject}}</td>
+                                                <td>{{c.fcaculty}}</td>
+                                                <td>{{c.room}}</td>
+                                                <td>{{c.year_level}}</td>
+                                                <td>{{c.schedule}}</td>
+                                                <td>
+                                                    <form action="{% url 'pre_enroll-subject' c.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-success" name="pre-enroll_subject">select</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {%endfor%}
+                              </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header p-2">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item"><a class="nav-link active" href="#subject_taken" data-toggle="tab">Subjects taken</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#assessment" data-toggle="tab">Assessment</a></li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="active tab-pane" id="subject_taken">
+                                    <table id="subject_taken-list" class="table table-bordered table-hover table-sm">
+                                        <thead>
+                                                <tr>
+                                                    <th>Subject schedule</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                            {%for s in subject_taken %}
+                                                <tr>
+                                                    <td>{{s.schedule_id}}</td>
+                                                    <td>
+                                                        <form action="{% url 'removed-subject' s.pk %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger" name="removed_subject">removed</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="assessment">
+                                    <table id="assessment-list" class="table table-bordered table-hover table-sm">
+                                        <thead>
+                                                <tr>
+                                                    <th>fee name</th>
+                                                    <th>amount</th>
+                                                    <th>multiplier</th>
+                                                    <th>total</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                    <td>tuition fee</td>
+                                                    <td>250/unit</td>
+                                                    <td>9</td>
+                                                    <td>2250</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" style="text-align:right; font-widget:2px bold">Grand Total</td>
+                                                    <td>2250</td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %} 
+</div>
+
+
+{% endblock content %}
+{% block extra_scripts %}
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- Page specific script -->
+
+
+
+
+<script>
+
+$(function () {
+  $('#class_schedule-list').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+  });
+});
+
+ 
+</script>
+{% endblock extra_scripts %}
