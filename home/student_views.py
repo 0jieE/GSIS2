@@ -267,9 +267,11 @@ def student_assessment_report(request):
     class_schedules = Class_Schedule.objects.all()
     enrollment = Enrollment.objects.all()
     assessment = Assessment.objects.all()
+    subject_taken_list = SubjectTaken.objects.all()
     is_pre_enrolled = False
     already_assessted = False
     total_payment = 0
+    total_credit_units = 0
 
     try:
         enrollmentDetail = EnrollmentDetail.objects.get(student=request.user.id)
@@ -285,6 +287,10 @@ def student_assessment_report(request):
     else:
         is_pre_enrolled = False
         enrollment_detail_instance = None
+
+    for subjects in subject_taken_list:
+        if subjects.enrollment_detail_id == enrollment_detail_instance:
+            total_credit_units += subjects.schedule_id.subject.credit_unit
     
     for assess in assessment:
         if assess.enrollment_detail_id == enrollment_detail_instance:
@@ -302,6 +308,7 @@ def student_assessment_report(request):
             'total_payment':total_payment,
             'already_assessted':already_assessted,
             'student':student,
+            'total_credit_units':total_credit_units,
     }
 
     html = get_template('student/pre_enrollment/assessment_report.html').render(context)

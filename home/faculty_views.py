@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse, JsonResponse
 from xhtml2pdf import pisa
-from .forms import LoginForm,SubjectTakenForm
+from .forms import LoginForm,SubjectTakenForm, FacultyGradeForm
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout, authenticate,login
@@ -76,9 +76,9 @@ def grades(request,pk):
 def edit_grade(request,pk):
     subject_taken = get_object_or_404(SubjectTaken, pk=pk)
     if(request.method == 'POST'):
-            form = SubjectTakenForm(request.POST, instance=subject_taken)
+            form = FacultyGradeForm(request.POST, instance=subject_taken)
     else:    
-            form = SubjectTakenForm(instance=subject_taken)
+            form = FacultyGradeForm(instance=subject_taken)
     return save_grade(request, form, 'faculty/grades/edit_grade.html')
 
 
@@ -91,11 +91,7 @@ def save_grade(request, form, template_name):
         subject_taken = SubjectTaken.objects.all()
         faculty = Faculty_user.objects.get(id=request.user.id)
         enrollment_detail = EnrollmentDetail.objects.all()
-        data['grade_list'] = render_to_string('faculty/grades/grade_list.html',{'subject_taken':subject_taken,
-                                                                                'subject_taken':subject_taken,   
-                                                                                'faculty':faculty,
-                                                                                'enrollment_detail':enrollment_detail, 
-                                                                                'subjects':subjects, })
+        data['grade_list'] = render_to_string('faculty/grades/grade_list.html',{'subject_taken':subject_taken,'faculty':faculty,'enrollment_detail':enrollment_detail,'subjects':subjects, })
     else:
         data['form_is_valid'] = False
 

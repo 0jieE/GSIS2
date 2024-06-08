@@ -431,6 +431,11 @@ class SubjectTakenForm(forms.ModelForm):
         model = SubjectTaken
         fields = ['schedule_id', 'enrollment_detail_id','is_pre_enroll','is_registered', 'is_dropped', 'midterm_grade', 'final_grade', 'final_re_grade']
 
+class FacultyGradeForm(forms.ModelForm):
+    class Meta:
+        model = SubjectTaken
+        fields = ['midterm_grade', 'final_grade', 'final_re_grade']
+
 
 class AssessmentForm(forms.ModelForm):
     class Meta:

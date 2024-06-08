@@ -1483,10 +1483,32 @@ def student_profile(request):
     if not request.user.is_authenticated:
         return redirect("login")
     else:
+        students_list = Student_user.objects.all()
+        enrollment_detail = EnrollmentDetail.objects.all()
+        students = Student_user.objects.values_list('id', flat=True)
+        en_detail = EnrollmentDetail.objects.values_list('student', flat=True)
+
+        un_registered = set(students) - set(en_detail)
+        registered = set(students) & set(en_detail)
+
+        un_registered_list = list(un_registered)  
+        registered_list = list(registered) 
+
+        if(request.method == 'POST'):
+                form = StudentRegistrationForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    return redirect('student_profile-admin')
+        else:    
+                form = StudentRegistrationForm()
         context = {
               'parent':'',
               'segment':'student_profile',
-              'student_profile':student_profile,        
+              'un_registered_list':un_registered_list,  
+              'students_list':students_list,
+              'registered_list':registered_list,
+              'enrollment_detail':enrollment_detail,
+              'form':form,
         }
         return render(request, 'administrator/student_profile/student_profile.html',context)
     

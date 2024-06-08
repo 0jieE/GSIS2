@@ -2,7 +2,7 @@
 <head>
     <style>
         h1{
-            text-align:center;
+            text-align:left;
         }
         h3{
             text-align:left;
@@ -15,12 +15,15 @@
         }
         th{
             padding: 3px;
-            text-align:center;
+            border-bottom: 2px solid black;
             
         }
         td{
-            text-align:center;
-
+            text-align:left;
+            padding:3px;
+        }
+        a{
+            text-align:left;
         }
 
     </style>
@@ -28,12 +31,13 @@
 </head>
 <body>
     <h1>{{student.user}}</h1>
+    <h1>{{enrollment_detail_instance.student_year}} {{enrollment_detail_instance.course_id}}</h1>
     <h2>Pre-enrolled subjects</h2>
     <table>
         <thead>
                 <tr>
-                    <th>Subject schedule</th>
-                    <th></th>
+                    <th colspan="10">Subject schedule</th>
+                    <th style="text-align:left">Room</th>
                     <th style="text-align:right">lec. unit</th>
                     <th style="text-align:right">lab. unit</th>
                 </tr>
@@ -42,22 +46,28 @@
             {%for s in subject_taken %}
                 {% if s.enrollment_detail_id.id == enrollment_detail_instance.id %}
                     <tr>
-                        <td  colspan="2" style="text-align:left">{{s.schedule_id}}</td>
+                        <td colspan="10" style="text-align:left">{{s.schedule_id}}</td>
+                        <td style="text-align:left">{{s.schedule_id.room}}</td>
                         <td style="text-align:right">{{s.schedule_id.subject.lecture_unit}}</td>
                         <td style="text-align:right">{{s.schedule_id.subject.laboratory_unit}}</td>
                     </tr>
                 {% endif %}
             {%endfor%}
+            <tr>
+                <td colspan="12" style="text-align:right;">Total Units</td>
+                <td><h3>{{total_credit_units}}</h3></td>
+            </tr>
         </tbody>
     </table>
                         
     <br>
     </br>
+    <h2>Assessment</h2>
     <table>
         <thead>
             <tr>
-                <th>fee name</th>
-                <th>amount</th>
+                <th tyle="text-align:left"><h3>fee name</h3></th>
+                <th tyle="text-align:left"><h3>amount</h3></th>
             </tr>
         </thead>
         <tbody>
@@ -70,8 +80,8 @@
                 {% endif %}
             {% endfor %}
             <tr>
-                <td style="text-align:right; font-widget:2px bold"> Total</td>
-                <td>{{total_payment}}</td>
+                <td tyle="text-align:right"> Total</td>
+                <td tyle="text-align:left"><h3>{{total_payment}}</h3></td>
             </tr>
         </tbody>
     </table>

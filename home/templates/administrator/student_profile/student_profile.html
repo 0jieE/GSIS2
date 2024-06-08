@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{%load crispy_forms_tags%}
 {% block title %} STUDENT PROFILE {% endblock title %}
 {% block extrastyle %}
 <!-- DataTables -->
@@ -23,118 +24,118 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12">
+                <div class="col-4">
                     <div class="card">
                         <div class="card-header">
-        
-                          <button type="button" class="btn btn-sm btn-primary float-right  js-add-payment" data-toggle="modal" data-target="#new-payment" data-url="#">Register new</button>
+                            No pre-registration students
+                            <button class="btn btn-primary span4 proj-div float-right" data-toggle="modal" data-target="#edit-account"><b>add</b></button>
                         </div>
-                        <div class="card-body p-10">
-                          <table id="payment-list" class="table table-bordered table-hover table-sm">
+                        <div class="card-body">
+                          <table id="un-list" class="table table-bordered table-hover table-sm">
                               <thead>
-                                  <tr>
-                                    <th>ID No.</th>
+                                  <tr>                       
                                     <th>Name</th>
-                                    <th>Program</th>
-                                    <th>Year Level</t>
-                                    <th></t>
+                                    <th>ID No.</th>
                                   </tr>
                               </thead>
                               <tbody>
-                                  <tr>
-                                    <td>24-1234</td>
-                                    <td>Arnold Taylor Smith</td>
-                                    <td>Master in Information System(MIS)</td>
-                                    <td>2nd Year</td>
-                                    <td>
-                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
-                                          Edit
-                                      </button>
-                                  </td>
-                                  </tr>
-                                  <tr>
-                                    <td>24-1263</td>
-                                    <td>Jason Latosa Gatong</td >
-                                    <td>Master in Public Administration(MPA)</td>
-                                    <td>1st Year</td>
-                                    <td>
-                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
-                                          Edit
-                                      </button>
-                                  </td>
-                                  </tr>
-                                  <tr>
-                                    <td>24-1429</td>
-                                    <td>Jayvee Chavez Alcantara</td >
-                                    <td>Master in Information System(MIS)</td>
-                                    <td>1st Year</td>
-                                    <td>
-                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
-                                          Edit
-                                      </button>
-                                  </td>
-                                  </tr>
-                                  <tr>
-                                    <td>24-2467</td>
-                                    <td>Prexter Aurelio Macaraeg</td >
-                                    <td>Master in Science in Biology(MSB)</td>
-                                    <td>3rd Year</td>
-                                    <td>
-                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
-                                          Edit
-                                      </button>
-                                  </td>
-                                  </tr>
-                                  <tr>
-                                    <td>24-1378</td>
-                                    <td>Abegail Manlabi Garcia</td >
-                                    <td>Master in Information System(MIS)</td>
-                                    <td>2nd Year</td>
-                                    <td>
-                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
-                                          Edit
-                                      </button>
-                                  </td>
-                                  </tr>
-                                  <tr>
-                                    <td>24-1321</td>
-                                    <td>Jade Marfil Cordevilla</td >
-                                      <td>Master in Science in Biology(MSb)</td>
-                                    <td>2nd Year</td>
-                                    <td>
-                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
-                                          Edit
-                                      </button>
-                                  </td>
-                                  </tr>
-                                  <tr>
-                                    <td>24-1222</td>
-                                    <td>Denim Angeles Fortin</td >
-                                    <td>Master in Information System(MIS)</td>
-                                    <td>1st Year</td>
-                                    <td>
-                                      <button class="btn btn-primary btn-sm js-edit-scholarship" data-url="#">
-                                          Edit
-                                      </button>
-                                  </td>
-                                  </tr>
-                                {% comment %} {% include "administrator/payment/list_payment.html" %} {% endcomment %}
+                                {% for un in un_registered_list %}
+                                  {% for s in students_list %}
+                                    {% if s.id == un and s.student == 1%}                                  
+                                    <tr>
+                                      <td>{{s}}</td>    
+                                      <td>{{s.id_no}}</td>                          
+                                    <tr>
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endfor %}
                               </tbody>
                           </table>
                         </div>
                     </div>
                 </div>
+                <div class="col-8">
+                  <div class="card">
+                      <div class="card-header">
+                        Pre-registered Students
+                      </div>
+                      <div class="card-body">
+                        <table id="rl-list" class="table table-bordered table-hover table-sm">
+                            <thead>
+                                <tr>                       
+                                  <th>Name</th>
+                                  <th>ID No.</th>
+                                  <th>Year Level</th>
+                                  <th>Course</th>
+                                  <th>Scholarship</th>
+                                  <th>Enrollment Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% for rl in registered_list %}
+                                {% for ed in enrollment_detail %}
+                                  {% if ed.student.id == rl%}                                  
+                                  <tr>
+                                    <td>{{ed.student}}</td>    
+                                    <td>{{ed.student.id_no}}</td> 
+                                    <td>{{ed.student_year}}</td>    
+                                    <td>{{ed.course_id}}</td> 
+                                    <td>{{ed.scholarship_is}}</td>    
+                                    <td>{{ed.enrollment_status}} for {{ed.enrollment}}</td>                             
+                                  <tr>
+                                  {% endif %}
+                                {% endfor %}
+                              {% endfor %}
+                            </tbody>
+                        </table>
+                      </div>
+                  </div>
+              </div>
             </div>
         </div>
     </section>
-    {% comment %} <div class="modal fade" id="new-payment">
-        <div class="modal-dialog">
-          <div class="modal-content">
+    <div id="edit-account" class="modal fade">
+      <div class="modal-dialog">
+         <div class="modal-content">
+         <form method='post'>
+            {% csrf_token %}
+            <div class="modal-header">
+              <h4 class="modal-title">Add new student</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
           </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div> {% endcomment %}
+            <div class="modal-body">
+              <div class="col-md-12">
+                  {{form.username|as_crispy_field}}
+              </div>
+              <div class="col-md-12">
+                  {{form.first_name|as_crispy_field}}
+              </div>
+              <div class="col-md-12">
+                  {{form.middle_name|as_crispy_field}}
+              </div>
+              <div class="col-md-12">
+                  {{form.last_name|as_crispy_field}}
+              </div>
+              <div class="col-md-12">
+                  {{form.id_no|as_crispy_field}}
+              </div>
+              <div class="col-md-12">
+                {{form.password1|as_crispy_field}}
+              </div>
+              <div class="col-md-12">
+                {{form.password2|as_crispy_field}}
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit"  name="editAccount" class="btn btn-primary">Save</button>
+            </div>
+         </form>
+         </div>
+       </div>
+     </div>
 </div>
 
 
@@ -160,78 +161,15 @@
 
 <script>
 
-  $(function() 
-  {
-      var loadform = function() 
-        {
-          var btn = $(this);
-          console.log(btn.attr("data-url"));
-          $.ajax
-          ({
-            url: btn.attr('data-url'),
-            type: 'get',
-            dataType: 'json',
-            beforeSend: function()
-            {
-                $("#new-payment").modal("show");
-            },
-            success: function (data) {
-                $("#new-payment .modal-content").html(data.html_form);
-            }
-          });
-        };
-
-      var saveForm = function() 
-        {
-          var form = $(this);
-          $.ajax
-          ({
-            url: form.attr("action"),
-            data: form.serialize(),
-            type: form.attr("method"),
-            dataType: 'json',
-            success: function (data) 
-            {
-              if (data.form_is_valid) 
-              {
-                $("#payment-list tbody").html(data.fees_list);
-                $("#new-payment").modal("hide");
-              }
-              else 
-              {
-                $("#new-payment .modal-content").html(data.html_form);
-              }
-            }
-          });
-        return false;
-        }
-
-  //add payment
-  $(".js-add-payment").click(loadform);
-  $("#new-payment").on("submit",".js-payment-create-form", saveForm);
-  //edit payment
-  $("#payment-list").on("click", ".js-edit-payment", loadform);
-  $("#new-payment").on("submit", ".js-payment-edit-form", saveForm);
-  //delete payment
-  $("#payment-list").on("click", ".js-delete-payment", loadform);
-  $("#new-payment").on("submit", ".js-payment-delete-form", saveForm);
-
-
-  $(function () {
-    $("#payment-list").DataTable({
-      "responsive": true, "lengthChange": true, "autoWidth": false,
-      "buttons": ["csv", "excel", "pdf", "print"]
-      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#payment-list_wrapper .col-md-6:eq(0)');
-    // $('#course_prospectus-list').DataTable({
-    //  "paging": true,
-    //  "lengthChange": false,
-    //  "searching": true,
-    //  "ordering": true,
-    //  "info": true,
-    //  "autoWidth": false,
-    //  "responsive": true,
-    // });
+$(function () {
+  $('#un-list').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
   });
 });
 
